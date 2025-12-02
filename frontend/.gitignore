@@ -1,0 +1,21 @@
+# Node.js 
+node_modules/
+yarn_debug.log*
+yarn_error.log* 
+#Banco de dados SQLite 
+*.db 
+*.db-jornal 
+#ENvoriment variables 
+.env 
+.env.local 
+#sistema operacional 
+.DS_Store
+Thumbs.db 
+#Editor/IDE 
+.vscode/ 
+.idea/ 
+*.swp 
+*.swo 
+#logs
+logs/ 
+*.log 

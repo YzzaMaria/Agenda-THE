@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda THE</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="tela-login" class="tela ativa">
+        <div class="login-container">
+            <h1 class="login-titulo">Agenda THE</h1>
+            <p class="login-subtitulo">Faça login para continuar</p>
+            
+            <form id="form-login" class="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-senha" placeholder="Senha" required>
+                <button type="submit" class="btn-login">Entrar</button>
+            </form>
+            
+            <div class="login-links">
+                <a href="#" onclick="mostrarCadastro()">Criar conta</a>
+                <a href="#">Esqueci a senha</a>
+            </div>
+            
+            <div class="demo-accounts">
+                <h3>Contas de Demonstração:</h3>
+                <div class="demo-account" onclick="preencherDemo('usuario@email.com', '123456')">
+                    👤 Usuário Final
+                </div>
+                <div class="demo-account" onclick="preencherDemo('produtor@email.com', '123456')">
+                    📅 Produtor
+                </div>
+                <div class="demo-account" onclick="preencherDemo('curador@email.com', '123456')">
+                    ✅ Curador
+                </div>
+                <div class="demo-account" onclick="preencherDemo('parceiro@email.com', '123456')">
+                    💰 Parceiro
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Cadastro -->
+    <div id="tela-cadastro" class="tela">
+        <div class="login-container">
+            <h1 class="login-titulo">Criar Conta</h1>
+            
+            <form id="form-cadastro" class="login-form">
+                <input type="text" id="cadastro-nome" placeholder="Nome completo" required>
+                <input type="email" id="cadastro-email" placeholder="Email" required>
+                <input type="password" id="cadastro-senha" placeholder="Senha" required>
+                
+                <label for="cadastro-perfil">Tipo de Perfil:</label>
+                <select id="cadastro-perfil" required>
+                    <option value="usuario_final">👤 Usuário Final</option>
+                    <option value="produtor">📅 Produtor/Organizador</option>
+                    <option value="curador">✅ Curador/Admin</option>
+                    <option value="parceiro">💰 Parceiro Local</option>
+                </select>
+                
+                <button type="submit" class="btn-login">Criar Conta</button>
+            </form>
+            
+            <div class="login-links">
+                <a href="#" onclick="mostrarLogin()">Já tenho uma conta</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela Seletora de Perfil (após login) -->
+<div id="tela-seletora" class="tela">
+    <div class="seletor-container">
+        <div class="header-com-logout">
+            <h1>Agenda THE</h1>
+            <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+        </div>
+        
+        <div class="usuario-info">
+            <h2>Bem-vindo, <span id="nome-usuario">Usuário</span>!</h2>
+            <p>Selecione o que deseja fazer:</p>
+        </div>
+        
+        <div class="botoes-perfil">
+            <button class="btn-perfil btn-final" onclick="entrarComoUsuarioFinal()">
+                <span class="perfil-icone">👤</span>
+                <div class="perfil-info">
+                    <div class="perfil-nome">Usuário Final</div>
+                    <div class="perfil-desc">Explorar eventos e comprar ingressos</div>
+                </div>
+                <span class="perfil-seta">→</span>
+            </button>
+
+            <button class="btn-perfil btn-produtor" onclick="entrarComoProdutor()">
+                <span class="perfil-icone">📅</span>
+                <div class="perfil-info">
+                    <div class="perfil-nome">Produtor/Organizador</div>
+                    <div class="perfil-desc">Criar e gerenciar eventos</div>
+                </div>
+                <span class="perfil-seta">→</span>
+            </button>
+
+            <button class="btn-perfil btn-curador" onclick="entrarComoCurador()">
+                <span class="perfil-icone">✅</span>
+                <div class="perfil-info">
+                    <div class="perfil-nome">Curador/Admin</div>
+                    <div class="perfil-desc">Validar e moderar eventos</div>
+                </div>
+                <span class="perfil-seta">→</span>
+            </button>
+
+            <button class="btn-perfil btn-parceiro" onclick="entrarComoParceiro()">
+                <span class="perfil-icone">💰</span>
+                <div class="perfil-info">
+                    <div class="perfil-nome">Parceiro Local</div>
+                    <div class="perfil-desc">Patrocinar eventos e campanhas</div>
+                </div>
+                <span class="perfil-seta">→</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- Telas dos Perfis -->
+    <div id="tela-usuario-final" class="tela">
+        <!-- Tela do Usuário Final -->
+    </div>
+
+    <div id="tela-produtor" class="tela">
+        <!-- Tela do Produtor -->
+    </div>
+
+    <div id="tela-curador" class="tela">
+        <!-- Tela do Curador -->
+    </div>
+
+    <div id="tela-parceiro" class="tela">
+        <!-- Tela do Parceiro -->
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/perfis/usuario-final.js"></script>
+    <script src="js/perfis/produtor.js"></script>
+    <script src="js/perfis/curador.js"></script>
+    <script src="js/perfis/parceiro.js"></script>
+</body>
+</html>
