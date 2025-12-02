@@ -1,7 +1,5 @@
-# Agenda-THE
-O Sistema Agenda THE centraliza a divulgação e curadoria de eventos culturais,sociais e de lazer da capital piauiense.  
+ 
 # Agenda THE 🎭
-
 Um sistema completo de gestão de eventos culturais com perfis múltiplos, sistema de recompensas e banco de dados SQLite.
 
 ## ✨ Funcionalidades
