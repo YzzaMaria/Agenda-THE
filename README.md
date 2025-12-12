@@ -50,7 +50,7 @@ cd backend
 npm install
 
 # Inicialize o banco de dados
-node database/recriar-banco-completo.js
+node database/init_db.js
 
 # Inicie o servidor
 node server.js
