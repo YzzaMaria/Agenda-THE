@@ -440,7 +440,16 @@
             document.getElementById('login-email').value = email;
             document.getElementById('login-senha').value = senha;
         }
-        
+        function mostrarTela(idDaTela) { 
+            const todasAsTelas = document.querySelectorAll('.tela'); 
+            todasAsTelas.forEach(tela => { 
+                tela.classList.remove('ativa'); 
+            }); 
+            const telaParaMostrar = document.getElementById(idDaTela);
+            if (telaParaMostrar) { 
+                telaParaMostrar.classList.add('ativa'); 
+            }
+        }
         function fazerLogout() {
             // Esconde todas as telas
             document.querySelectorAll('.tela').forEach(tela => {
