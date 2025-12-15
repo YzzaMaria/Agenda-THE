@@ -6,7 +6,7 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -14,9 +14,13 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Configuração do banco de dados
-const dbPath = path.join(__dirname, 'database', 'agenda_the.db');
-const db = new sqlite3.Database(dbPath);
+//const dbPath = path.join(__dirname, 'database', 'agenda_the.db');
+//const db = new sqlite3.Database(dbPath);
+const dbPath = process.env.NODE_ENV === 'production' 
+    ? path.join(process.cwd(), 'agenda_the.db') // Para produção
+    : path.join(__dirname, 'database', 'agenda_the.db'); // Para desenvolvimento
 
+const db = new sqlite3.Database(dbPath);
 // ==================== INICIALIZAÇÃO DO BANCO ====================
 function inicializarBanco() {
     // Tabela de usuários

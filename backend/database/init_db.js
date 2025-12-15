@@ -229,10 +229,9 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='usuarios'", 
     }
 });
 
-db.close((err) => {
-    if (err) {
-        console.error('❌ Erro ao fechar banco:', err.message);
-    } else {
-        console.log('🔒 Banco de dados fechado com sucesso');
-    }
-});
+///db.close((err) => {
+//    if (err) {
+//        console.error('❌ Erro ao fechar banco:', err.message);
+   // } else {
+      //  console.log('🔒 Banco de dados fechado com sucesso');
+   // }

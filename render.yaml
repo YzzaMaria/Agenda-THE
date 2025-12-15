@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: agenda-the
+    env: node
+    region: oregon # Escolha uma região próxima a você 
+    rootDirectory: backend
+    buildCommand: |
+      npm install
+      npm run db:init || echo "Banco já inicializado"
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        generateValue: true
+    healthCheckPath: /api
+    autoDeploy: true
+    disk:
+      name: agenda-data
+      mountPath: /opt/render/project/src
+      sizeGB: 1
