@@ -1,6 +1,6 @@
 // app.js - Funções específicas da aplicação (sem autenticação)
-
 const API_BASE = '/api';
+
 const estadoApp = {
     usuario: null,
     eventos: [],
@@ -16,21 +16,16 @@ const estadoApp = {
 };
 
 // ==================== INICIALIZAÇÃO ====================
-
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('📱 App.js inicializado');
-    
-    // Testar conexão com API
     await testarConexaoAPI();
     
-    // Carregar dados iniciais se necessário
     if (window.location.href.includes('usuario-final')) {
         await inicializarUsuarioFinal();
     }
 });
 
 // ==================== CONEXÃO COM API ====================
-
 async function testarConexaoAPI() {
     try {
         const response = await fetch(`${API_BASE}/`);
@@ -40,7 +35,6 @@ async function testarConexaoAPI() {
     } catch (error) {
         console.warn('⚠️ API offline, usando dados locais');
         
-        // Dados de fallback para desenvolvimento
         estadoApp.eventos = [
             {
                 id: 1,
@@ -56,7 +50,7 @@ async function testarConexaoAPI() {
             {
                 id: 2,
                 titulo: "Exposição de Arte Moderna",
-                categoria: "arte", 
+                categoria: "arte",
                 data_evento: "2024-11-20",
                 hora_evento: "14:00",
                 local: "Museu de Arte Contemporânea",
@@ -93,20 +87,11 @@ async function testarConexaoAPI() {
 }
 
 // ==================== TELA USUÁRIO FINAL ====================
-
 async function inicializarUsuarioFinal() {
     console.log('👤 Inicializando módulo do usuário final');
-    
-    // Carregar eventos
     await carregarEventos();
-    
-    // Inicializar categorias
     inicializarCategorias();
-    
-    // Inicializar busca
     inicializarBusca();
-    
-    // Inicializar navegação
     inicializarNavegacao();
 }
 
@@ -124,23 +109,22 @@ async function carregarEventos() {
     } catch (error) {
         console.warn('⚠️ Usando eventos locais');
     }
-    
-    // Filtrar eventos por categoria ativa
-    const eventosFiltrados = estadoApp.categoriaAtiva === 'todos' 
-        ? estadoApp.eventos 
+
+    const eventosFiltrados = estadoApp.categoriaAtiva === 'todos'
+        ? estadoApp.eventos
         : estadoApp.eventos.filter(e => e.categoria === estadoApp.categoriaAtiva);
-    
-    // Exibir eventos
+
     exibirEventos(eventosFiltrados);
 }
 
 function exibirEventos(eventos) {
     const container = document.getElementById('lista-eventos-usuario');
+    
     if (!container) {
         console.error('❌ Container de eventos não encontrado');
         return;
     }
-    
+
     if (!eventos || eventos.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; color: #64748b;">
@@ -150,10 +134,12 @@ function exibirEventos(eventos) {
         `;
         return;
     }
-    
+
     container.innerHTML = eventos.map(evento => `
         <div class="evento-card" onclick="verDetalhesEvento(${evento.id})">
-            <div class="evento-imagem" style="background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}, #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')})">
+            <div class="evento-imagem" style="background: linear-gradient(135deg, 
+                #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')},
+                #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')})">
                 ${evento.destaque ? '<span class="evento-destaque">🔥 Destaque</span>' : ''}
             </div>
             <div class="evento-conteudo">
@@ -177,29 +163,31 @@ function exibirEventos(eventos) {
             </div>
         </div>
     `).join('');
-    
+
     console.log(`✅ ${eventos.length} eventos exibidos`);
 }
 
 function inicializarCategorias() {
     const container = document.getElementById('lista-categorias-usuario');
+    
     if (!container) {
         console.error('❌ Container de categorias não encontrado');
         return;
     }
-    
+
     container.innerHTML = estadoApp.categorias.map(categoria => `
-        <button class="categoria-btn ${estadoApp.categoriaAtiva === categoria.id ? 'ativa' : ''}" 
+        <button class="categoria-btn ${estadoApp.categoriaAtiva === categoria.id ? 'ativa' : ''}"
                 onclick="filtrarPorCategoria('${categoria.id}')">
             ${categoria.nome}
         </button>
     `).join('');
-    
+
     console.log('✅ Categorias inicializadas');
 }
 
 function inicializarBusca() {
     const campoBusca = document.getElementById('campo-busca-usuario');
+    
     if (campoBusca) {
         campoBusca.addEventListener('input', (e) => {
             buscarEventos(e.target.value);
@@ -213,20 +201,18 @@ function inicializarNavegacao() {
 }
 
 // ==================== FILTROS E BUSCA ====================
-
 function filtrarPorCategoria(categoriaId) {
     console.log(`🎯 Filtrando por categoria: ${categoriaId}`);
     estadoApp.categoriaAtiva = categoriaId;
-    
-    // Atualizar UI das categorias
+
     document.querySelectorAll('.categoria-btn').forEach(btn => {
         btn.classList.remove('ativa');
     });
-    document.querySelector(`button[onclick*="${categoriaId}"]`)?.classList.add('ativa');
     
-    // Filtrar e exibir eventos
-    const eventosFiltrados = categoriaId === 'todos' 
-        ? estadoApp.eventos 
+    document.querySelector(`button[onclick*="${categoriaId}"]`)?.classList.add('ativa');
+
+    const eventosFiltrados = categoriaId === 'todos'
+        ? estadoApp.eventos
         : estadoApp.eventos.filter(e => e.categoria === categoriaId);
     
     exibirEventos(eventosFiltrados);
@@ -235,7 +221,7 @@ function filtrarPorCategoria(categoriaId) {
 function buscarEventos(termo) {
     console.log(`🔍 Buscando: "${termo}"`);
     
-    const eventosFiltrados = estadoApp.eventos.filter(evento => 
+    const eventosFiltrados = estadoApp.eventos.filter(evento =>
         evento.titulo.toLowerCase().includes(termo.toLowerCase()) ||
         (evento.descricao && evento.descricao.toLowerCase().includes(termo.toLowerCase())) ||
         evento.local.toLowerCase().includes(termo.toLowerCase())
@@ -245,17 +231,16 @@ function buscarEventos(termo) {
 }
 
 // ==================== FUNÇÕES DE EVENTOS ====================
-
 function verDetalhesEvento(eventoId) {
     console.log(`🔍 Visualizando evento ID: ${eventoId}`);
     
     const evento = estadoApp.eventos.find(e => e.id === eventoId);
+    
     if (!evento) {
         alert('Evento não encontrado!');
         return;
     }
-    
-    // Criar modal de detalhes
+
     const modalHTML = `
         <div class="modal-overlay" onclick="fecharModal()">
             <div class="modal-content" onclick="event.stopPropagation()">
@@ -279,14 +264,12 @@ function verDetalhesEvento(eventoId) {
             </div>
         </div>
     `;
-    
-    // Adicionar modal ao body
+
     const modal = document.createElement('div');
     modal.innerHTML = modalHTML;
     modal.id = 'modal-detalhes';
     document.body.appendChild(modal);
-    
-    // Adicionar estilos do modal
+
     const style = document.createElement('style');
     style.textContent = `
         .modal-overlay {
@@ -348,6 +331,7 @@ function verDetalhesEvento(eventoId) {
             margin-top: 20px;
         }
     `;
+    
     document.head.appendChild(style);
 }
 
@@ -364,15 +348,16 @@ function alternarFavorito(elemento, eventoId) {
     elemento.classList.toggle('ativo', !isFavorito);
     
     console.log(`${isFavorito ? '❌ Removido' : '✅ Adicionado'} favorito: ${eventoId}`);
-    
-    // Aqui você poderia salvar no localStorage ou enviar para API
+
     const favoritos = JSON.parse(localStorage.getItem('favoritos') || '[]');
+    
     if (isFavorito) {
         const index = favoritos.indexOf(eventoId);
         if (index > -1) favoritos.splice(index, 1);
     } else {
         favoritos.push(eventoId);
     }
+    
     localStorage.setItem('favoritos', JSON.stringify(favoritos));
 }
 
@@ -381,7 +366,6 @@ function comprarIngresso(eventoId) {
 }
 
 // ==================== FUNÇÕES AUXILIARES ====================
-
 function formatarData(dataString) {
     if (!dataString) return 'Data não informada';
     
@@ -398,25 +382,20 @@ function formatarData(dataString) {
 }
 
 // ==================== NAVEGAÇÃO INTERNA ====================
-
-// Estas funções já estão definidas no auth.js, mas aqui são específicas para UI
-
 function mudarParaHomeUsuario() {
     console.log('🏠 Mudando para Home (usuário)');
-    // A navegação real é feita pelo auth.js
 }
 
 function mudarParaBuscaUsuario() {
     console.log('🔍 Mudando para Busca (usuário)');
-    // A navegação real é feita pelo auth.js
 }
 
 function mudarParaFavoritosUsuario() {
     console.log('❤️ Mudando para Favoritos (usuário)');
     alert('📋 Lista de favoritos em desenvolvimento!');
     
-    // Mostrar favoritos do localStorage
     const favoritos = JSON.parse(localStorage.getItem('favoritos') || '[]');
+    
     if (favoritos.length > 0) {
         alert(`Você tem ${favoritos.length} eventos favoritados!`);
     } else {

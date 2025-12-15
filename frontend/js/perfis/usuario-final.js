@@ -1,11 +1,8 @@
 // usuario-final.js - Módulo especializado para funcionalidades do usuário final
-
 console.log('✅ Módulo Usuário Final carregado');
 
-// Configuração local
 const USUARIO_API_BASE = '/api';
 
-// Estado específico do usuário final
 const estadoUsuarioFinal = {
     categoriaAtiva: 'todos',
     eventos: [],
@@ -14,23 +11,14 @@ const estadoUsuarioFinal = {
     termoBusca: ''
 };
 
-// ==================== INICIALIZAÇÃO ====================
-
 function inicializarUsuarioFinal() {
     console.log('🚀 Inicializando módulo do usuário final');
-    
-    // Carregar eventos
     carregarEventosUsuario();
-    
-    // Configurar listeners
     configurarBusca();
     configurarCategorias();
     configurarNavegacao();
-    
     console.log('✅ Módulo do usuário final inicializado');
 }
-
-// ==================== CARREGAMENTO DE DADOS ====================
 
 async function carregarEventosUsuario() {
     console.log('📡 Carregando eventos específicos do usuário...');
@@ -50,8 +38,7 @@ async function carregarEventosUsuario() {
         console.error('❌ Erro ao carregar eventos:', error);
         usarEventosDemo();
     }
-    
-    // Exibir eventos após carregamento
+
     exibirEventosUsuario();
 }
 
@@ -127,26 +114,22 @@ function usarEventosDemo() {
     ];
 }
 
-// ==================== EXIBIÇÃO DE EVENTOS ====================
-
 function exibirEventosUsuario() {
     const container = document.getElementById('lista-eventos-usuario');
+    
     if (!container) {
         console.error('❌ Container de eventos não encontrado');
         return;
     }
-    
-    // Filtrar eventos
+
     let eventosFiltrados = estadoUsuarioFinal.eventos;
-    
-    // Aplicar filtro de categoria
+
     if (estadoUsuarioFinal.categoriaAtiva !== 'todos') {
         eventosFiltrados = eventosFiltrados.filter(evento => 
             evento.categoria === estadoUsuarioFinal.categoriaAtiva
         );
     }
-    
-    // Aplicar filtro de busca
+
     if (estadoUsuarioFinal.buscaAtiva && estadoUsuarioFinal.termoBusca) {
         const termo = estadoUsuarioFinal.termoBusca.toLowerCase();
         eventosFiltrados = eventosFiltrados.filter(evento =>
@@ -155,8 +138,7 @@ function exibirEventosUsuario() {
             evento.local.toLowerCase().includes(termo)
         );
     }
-    
-    // Verificar se há eventos
+
     if (!eventosFiltrados || eventosFiltrados.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; color: #64748b;">
@@ -166,15 +148,16 @@ function exibirEventosUsuario() {
         `;
         return;
     }
-    
-    // Exibir eventos
+
     container.innerHTML = eventosFiltrados.map(evento => {
         const percentualLotacao = Math.min(100, (evento.ingressos_vendidos / evento.lotacao) * 100);
         const isFavorito = estadoUsuarioFinal.favoritos.includes(evento.id);
-        
+
         return `
             <div class="evento-card" onclick="verDetalhesEventoCompleto(${evento.id})">
-                <div class="evento-imagem" style="background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}, #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')})">
+                <div class="evento-imagem" style="background: linear-gradient(135deg, 
+                    #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')},
+                    #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')})">
                     ${evento.destaque ? '<span class="evento-destaque">🔥 Destaque</span>' : ''}
                     <div class="lotacao-indicator" title="${evento.ingressos_vendidos}/${evento.lotacao} ingressos vendidos">
                         <div class="lotacao-bar" style="width: ${percentualLotacao}%"></div>
@@ -186,8 +169,8 @@ function exibirEventosUsuario() {
                             <div class="evento-titulo">${evento.titulo}</div>
                             <span class="evento-categoria">${formatarCategoria(evento.categoria)}</span>
                         </div>
-                        <span class="evento-favorito ${isFavorito ? 'ativo' : ''}" 
-                              onclick="event.stopPropagation(); alternarFavoritoUsuario(${evento.id}, this)">
+                        <span class="evento-favorito ${isFavorito ? 'ativo' : ''}"
+                            onclick="event.stopPropagation(); alternarFavoritoUsuario(${evento.id}, this)">
                             ${isFavorito ? '❤️' : '🤍'}
                         </span>
                     </div>
@@ -208,15 +191,14 @@ function exibirEventosUsuario() {
             </div>
         `;
     }).join('');
-    
+
     console.log(`✅ ${eventosFiltrados.length} eventos exibidos`);
-    
-    // Adicionar estilos para o indicador de lotação
     adicionarEstiloLotacao();
 }
 
 function adicionarEstiloLotacao() {
     const styleId = 'estilo-lotacao-usuario';
+    
     if (!document.getElementById(styleId)) {
         const style = document.createElement('style');
         style.id = styleId;
@@ -232,7 +214,7 @@ function adicionarEstiloLotacao() {
             }
             .lotacao-bar {
                 height: 100%;
-                background: ${estadoUsuarioFinal.categoriaAtiva === 'todos' ? '#9333ea' : 
+                background: ${estadoUsuarioFinal.categoriaAtiva === 'todos' ? '#9333ea' :
                            estadoUsuarioFinal.categoriaAtiva === 'musica' ? '#ec4899' :
                            estadoUsuarioFinal.categoriaAtiva === 'arte' ? '#4f46e5' :
                            estadoUsuarioFinal.categoriaAtiva === 'teatro' ? '#ea580c' :
@@ -248,15 +230,14 @@ function adicionarEstiloLotacao() {
     }
 }
 
-// ==================== CATEGORIAS ====================
-
 function configurarCategorias() {
     const container = document.getElementById('lista-categorias-usuario');
+    
     if (!container) {
         console.error('❌ Container de categorias não encontrado');
         return;
     }
-    
+
     const categorias = [
         { id: 'todos', nome: 'Todos', icone: '🌟' },
         { id: 'musica', nome: 'Música', icone: '🎵' },
@@ -265,50 +246,45 @@ function configurarCategorias() {
         { id: 'gastronomia', nome: 'Gastronomia', icone: '🍴' },
         { id: 'esportes', nome: 'Esportes', icone: '⚽' }
     ];
-    
+
     container.innerHTML = categorias.map(categoria => `
-        <button class="categoria-btn ${estadoUsuarioFinal.categoriaAtiva === categoria.id ? 'ativa' : ''}" 
+        <button class="categoria-btn ${estadoUsuarioFinal.categoriaAtiva === categoria.id ? 'ativa' : ''}"
                 onclick="filtrarPorCategoriaUsuario('${categoria.id}')"
                 title="${categoria.nome}">
             <span class="categoria-icone">${categoria.icone}</span>
             <span class="categoria-nome">${categoria.nome}</span>
         </button>
     `).join('');
-    
+
     console.log('✅ Categorias configuradas');
 }
 
 function filtrarPorCategoriaUsuario(categoriaId) {
     console.log(`🎯 Filtrando por categoria: ${categoriaId}`);
     estadoUsuarioFinal.categoriaAtiva = categoriaId;
-    
-    // Atualizar UI das categorias
+
     document.querySelectorAll('#lista-categorias-usuario .categoria-btn').forEach(btn => {
         btn.classList.remove('ativa');
     });
     
     const btnAtivo = document.querySelector(`button[onclick*="filtrarPorCategoriaUsuario('${categoriaId}')"]`);
     if (btnAtivo) btnAtivo.classList.add('ativa');
-    
-    // Atualizar eventos
+
     exibirEventosUsuario();
 }
 
-// ==================== BUSCA ====================
-
 function configurarBusca() {
     const campoBusca = document.getElementById('campo-busca-usuario');
+    
     if (!campoBusca) {
         console.error('❌ Campo de busca não encontrado');
         return;
     }
-    
-    // Limpar busca anterior
+
     campoBusca.value = '';
     estadoUsuarioFinal.buscaAtiva = false;
     estadoUsuarioFinal.termoBusca = '';
-    
-    // Configurar listener
+
     campoBusca.addEventListener('input', (e) => {
         const termo = e.target.value.trim();
         estadoUsuarioFinal.buscaAtiva = termo.length > 0;
@@ -318,50 +294,39 @@ function configurarBusca() {
             exibirEventosUsuario();
         }
     });
-    
+
     console.log('✅ Busca configurada');
 }
-
-// ==================== FAVORITOS ====================
 
 function alternarFavoritoUsuario(eventoId, elemento) {
     const index = estadoUsuarioFinal.favoritos.indexOf(eventoId);
     const evento = estadoUsuarioFinal.eventos.find(e => e.id === eventoId);
     
     if (index === -1) {
-        // Adicionar favorito
         estadoUsuarioFinal.favoritos.push(eventoId);
         elemento.textContent = '❤️';
         elemento.classList.add('ativo');
         console.log('❤️ Evento favoritado:', evento?.titulo || eventoId);
-        
-        // Mostrar feedback
         mostrarToast(`"${evento?.titulo || 'Evento'}" adicionado aos favoritos!`);
     } else {
-        // Remover favorito
         estadoUsuarioFinal.favoritos.splice(index, 1);
         elemento.textContent = '🤍';
         elemento.classList.remove('ativo');
         console.log('🤍 Evento removido dos favoritos:', evento?.titulo || eventoId);
-        
-        // Mostrar feedback
         mostrarToast(`"${evento?.titulo || 'Evento'}" removido dos favoritos!`);
     }
-    
-    // Salvar no localStorage
+
     localStorage.setItem('favoritos_usuario', JSON.stringify(estadoUsuarioFinal.favoritos));
 }
 
-// ==================== DETALHES DO EVENTO ====================
-
 function verDetalhesEventoCompleto(eventoId) {
     const evento = estadoUsuarioFinal.eventos.find(e => e.id === eventoId);
+    
     if (!evento) {
         alert('Evento não encontrado!');
         return;
     }
-    
-    // Criar modal de detalhes
+
     const modalHTML = `
         <div class="modal-overlay" onclick="fecharModalUsuario()">
             <div class="modal-content" onclick="event.stopPropagation()">
@@ -370,10 +335,11 @@ function verDetalhesEventoCompleto(eventoId) {
                     <button class="modal-close" onclick="fecharModalUsuario()">✕</button>
                 </div>
                 <div class="modal-body">
-                    <div class="evento-imagem-modal" style="background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}, #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')})">
+                    <div class="evento-imagem-modal" style="background: linear-gradient(135deg, 
+                        #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')},
+                        #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')})">
                         ${evento.destaque ? '<span class="evento-destaque-modal">🔥 Destaque</span>' : ''}
                     </div>
-                    
                     <div class="evento-info-modal">
                         <div class="info-item">
                             <span class="info-label">📅 Data e Hora:</span>
@@ -396,14 +362,12 @@ function verDetalhesEventoCompleto(eventoId) {
                             <span class="info-value">${evento.ingressos_vendidos}/${evento.lotacao} vendidos</span>
                         </div>
                     </div>
-                    
                     ${evento.descricao ? `
-                        <div class="evento-descricao-modal">
-                            <h3>Sobre o Evento</h3>
-                            <p>${evento.descricao}</p>
-                        </div>
+                    <div class="evento-descricao-modal">
+                        <h3>Sobre o Evento</h3>
+                        <p>${evento.descricao}</p>
+                    </div>
                     ` : ''}
-                    
                     <div class="modal-actions">
                         <button class="btn btn-secondary" onclick="fecharModalUsuario()">
                             Voltar
@@ -416,14 +380,12 @@ function verDetalhesEventoCompleto(eventoId) {
             </div>
         </div>
     `;
-    
-    // Adicionar modal
+
     const modal = document.createElement('div');
     modal.innerHTML = modalHTML;
     modal.id = 'modal-detalhes-usuario';
     document.body.appendChild(modal);
-    
-    // Adicionar estilos do modal
+
     adicionarEstilosModalUsuario();
 }
 
@@ -436,6 +398,7 @@ function fecharModalUsuario() {
 
 function adicionarEstilosModalUsuario() {
     const styleId = 'estilos-modal-usuario';
+    
     if (!document.getElementById(styleId)) {
         const style = document.createElement('style');
         style.id = styleId;
@@ -570,20 +533,17 @@ function adicionarEstilosModalUsuario() {
 
 function comprarIngressoUsuario(eventoId) {
     const evento = estadoUsuarioFinal.eventos.find(e => e.id === eventoId);
-    if (!evento) return;
     
-    alert(`🎫 Compra de Ingresso\n\nEvento: ${evento.titulo}\nPreço: ${evento.preco ? `R$ ${parseFloat(evento.preco).toFixed(2)}` : 'Gratuito'}\n\nEsta funcionalidade será implementada em breve!`);
+    if (!evento) return;
+
+    alert(`🎫 Compra de Ingresso\n\nEvento: ${evento.titulo}\nPreço:${evento.preco ? `R$ ${parseFloat(evento.preco).toFixed(2)}` : 'Gratuito'}\n\nEsta funcionalidade será implementada em breve!`);
     fecharModalUsuario();
 }
 
-// ==================== NAVEGAÇÃO INTERNA ====================
-
 function configurarNavegacao() {
     console.log('✅ Navegação interna configurada');
-    // A navegação principal é gerenciada pelo auth.js
 }
 
-// Funções específicas do usuário para navegação
 function navegarParaFavoritosUsuario() {
     const favoritos = estadoUsuarioFinal.favoritos;
     
@@ -591,13 +551,11 @@ function navegarParaFavoritosUsuario() {
         mostrarToast('Você ainda não tem eventos favoritados!');
         return;
     }
-    
-    // Filtrar apenas eventos favoritados
+
     const eventosFavoritos = estadoUsuarioFinal.eventos.filter(evento => 
         favoritos.includes(evento.id)
     );
-    
-    // Criar modal de favoritos
+
     const modalHTML = `
         <div class="modal-overlay" onclick="fecharModalUsuario()">
             <div class="modal-content" onclick="event.stopPropagation()">
@@ -623,8 +581,7 @@ function navegarParaFavoritosUsuario() {
             </div>
         </div>
     `;
-    
-    // Adicionar modal
+
     const modal = document.createElement('div');
     modal.innerHTML = modalHTML;
     modal.id = 'modal-favoritos-usuario';
@@ -635,8 +592,6 @@ function navegarParaPerfilUsuario() {
     mostrarToast('👤 Perfil do usuário em desenvolvimento!');
 }
 
-// ==================== FUNÇÕES AUXILIARES ====================
-
 function formatarCategoria(categoria) {
     const categoriasMap = {
         'musica': 'Música',
@@ -645,6 +600,7 @@ function formatarCategoria(categoria) {
         'gastronomia': 'Gastronomia',
         'esportes': 'Esportes'
     };
+    
     return categoriasMap[categoria] || categoria;
 }
 
@@ -665,19 +621,14 @@ function formatarDataUsuario(dataString) {
 }
 
 function mostrarToast(mensagem) {
-    // Remover toast anterior
     const toastAnterior = document.getElementById('toast-usuario');
     if (toastAnterior) toastAnterior.remove();
-    
-    // Criar novo toast
+
     const toast = document.createElement('div');
     toast.id = 'toast-usuario';
-    toast.innerHTML = `
-        <div class="toast-content">${mensagem}</div>
-    `;
+    toast.innerHTML = `<div class="toast-content">${mensagem}</div>`;
     document.body.appendChild(toast);
-    
-    // Adicionar estilos
+
     if (!document.getElementById('estilo-toast-usuario')) {
         const style = document.createElement('style');
         style.id = 'estilo-toast-usuario';
@@ -708,8 +659,7 @@ function mostrarToast(mensagem) {
         `;
         document.head.appendChild(style);
     }
-    
-    // Remover após 3 segundos
+
     setTimeout(() => {
         if (toast.parentNode) {
             toast.remove();
@@ -717,9 +667,7 @@ function mostrarToast(mensagem) {
     }, 3000);
 }
 
-// ==================== EXPORTAÇÃO DE FUNÇÕES ====================
-
-// Exportar apenas as funções específicas deste módulo
+// Exportar funções
 window.inicializarUsuarioFinal = inicializarUsuarioFinal;
 window.filtrarPorCategoriaUsuario = filtrarPorCategoriaUsuario;
 window.verDetalhesEventoCompleto = verDetalhesEventoCompleto;
@@ -729,7 +677,6 @@ window.comprarIngressoUsuario = comprarIngressoUsuario;
 window.navegarParaFavoritosUsuario = navegarParaFavoritosUsuario;
 window.navegarParaPerfilUsuario = navegarParaPerfilUsuario;
 
-// Funções de navegação - delegar para auth.js se existirem
 window.mostrarNotificacoes = function() {
     mostrarToast('🔔 Você tem 3 novas notificações!');
 };

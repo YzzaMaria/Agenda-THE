@@ -6,7 +6,6 @@ let usuarioPerfil = null;
 function abrirPerfilUsuario() {
     console.log('👤 Abrindo perfil do usuário');
     
-    // Buscar dados do usuário (simulação)
     usuarioPerfil = {
         id: 1,
         nome: 'João Silva',
@@ -29,25 +28,25 @@ function carregarTelaPerfil() {
     if (!usuarioPerfil) return;
     
     const tela = document.getElementById('tela-perfil-usuario');
+    
     if (!tela) return;
-    
-    const proximoNivel = usuarioPerfil.pontos >= 2000 ? 'Mestre' : 
+
+    const proximoNivel = usuarioPerfil.pontos >= 2000 ? 'Mestre' :
                         usuarioPerfil.pontos >= 1000 ? 'Explorador' : 'Novato';
-    const progressoNivel = usuarioPerfil.pontos >= 2000 ? 100 : 
-                          usuarioPerfil.pontos >= 1000 ? ((usuarioPerfil.pontos - 1000) / 1000) * 100 : 
-                          (usuarioPerfil.pontos / 1000) * 100;
     
+    const progressoNivel = usuarioPerfil.pontos >= 2000 ? 100 :
+                          usuarioPerfil.pontos >= 1000 ? ((usuarioPerfil.pontos - 1000) / 1000) * 100 :
+                          (usuarioPerfil.pontos / 1000) * 100;
+
     tela.innerHTML = `
         <!-- Header do Perfil -->
         <div class="perfil-header-completo">
             <button class="btn-voltar-perfil" onclick="voltarParaHomePerfil()">
                 <i class="fas fa-arrow-left"></i>
             </button>
-            
             <div class="perfil-avatar-grande">
                 <i class="fas fa-user" style="font-size: 3rem; color: #9333ea; line-height: 100px;"></i>
             </div>
-            
             <h1 class="perfil-nome">${usuarioPerfil.nome}</h1>
             <p class="perfil-nivel">${usuarioPerfil.nivel} • ${usuarioPerfil.pontos} pontos</p>
         </div>
@@ -145,7 +144,6 @@ function carregarTelaPerfil() {
                                 Participou
                             </div>
                         </div>
-                        
                         <div class="evento-recente">
                             <div class="evento-recente-info">
                                 <div class="evento-recente-titulo">Exposição de Arte</div>
@@ -168,25 +166,21 @@ function carregarTelaPerfil() {
                             <span>Editar Perfil</span>
                             <i class="fas fa-chevron-right"></i>
                         </button>
-                        
                         <button class="configuracao-item" onclick="alterarSenha()">
                             <i class="fas fa-lock"></i>
                             <span>Alterar Senha</span>
                             <i class="fas fa-chevron-right"></i>
                         </button>
-                        
                         <button class="configuracao-item" onclick="configurarNotificacoes()">
                             <i class="fas fa-bell"></i>
                             <span>Notificações</span>
                             <i class="fas fa-chevron-right"></i>
                         </button>
-                        
                         <button class="configuracao-item" onclick="ajudaSuporte()">
                             <i class="fas fa-question-circle"></i>
                             <span>Ajuda e Suporte</span>
                             <i class="fas fa-chevron-right"></i>
                         </button>
-                        
                         <button class="configuracao-item configuracao-sair" onclick="sairDaConta()">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Sair da Conta</span>
@@ -217,16 +211,14 @@ function carregarTelaPerfil() {
             </div>
         </div>
     `;
-    
-    // Adicionar estilos específicos
+
     adicionarEstilosPerfil();
-    
-    // Mudar para esta tela
     mudarTela('perfil-usuario');
 }
 
 function adicionarEstilosPerfil() {
     const styleId = 'estilos-perfil-usuario';
+    
     if (!document.getElementById(styleId)) {
         const style = document.createElement('style');
         style.id = styleId;
@@ -238,7 +230,6 @@ function adicionarEstilosPerfil() {
                 text-align: center;
                 position: relative;
             }
-            
             .btn-voltar-perfil {
                 position: absolute;
                 top: 20px;
@@ -255,7 +246,6 @@ function adicionarEstilosPerfil() {
                 font-size: 1.2rem;
                 cursor: pointer;
             }
-            
             .perfil-avatar-grande {
                 width: 100px;
                 height: 100px;
@@ -268,23 +258,19 @@ function adicionarEstilosPerfil() {
                 align-items: center;
                 justify-content: center;
             }
-            
             .perfil-nome {
                 margin: 0;
                 font-size: 1.5rem;
                 font-weight: bold;
             }
-            
             .perfil-nivel {
                 margin: 8px 0 0 0;
                 opacity: 0.9;
                 font-size: 0.9rem;
             }
-            
             .conteudo-perfil {
                 padding-bottom: 80px;
             }
-            
             .perfil-info-completa {
                 background: white;
                 border-radius: 24px;
@@ -292,11 +278,9 @@ function adicionarEstilosPerfil() {
                 padding: 30px 20px;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             }
-            
             .progresso-nivel {
                 margin-bottom: 30px;
             }
-            
             .progresso-info {
                 display: flex;
                 justify-content: space-between;
@@ -304,7 +288,6 @@ function adicionarEstilosPerfil() {
                 font-size: 0.9rem;
                 color: #64748b;
             }
-            
             .progresso-bar-nivel {
                 height: 10px;
                 background: #e2e8f0;
@@ -312,20 +295,17 @@ function adicionarEstilosPerfil() {
                 overflow: hidden;
                 margin-bottom: 8px;
             }
-            
             .progresso-fill {
                 height: 100%;
                 background: linear-gradient(90deg, #9333ea, #ec4899);
                 border-radius: 5px;
                 transition: width 0.3s ease;
             }
-            
             .progresso-pontos {
                 text-align: center;
                 font-size: 0.8rem;
                 color: #64748b;
             }
-            
             .perfil-stats {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
@@ -333,48 +313,40 @@ function adicionarEstilosPerfil() {
                 margin: 30px 0;
                 text-align: center;
             }
-            
             .perfil-stat-valor {
                 font-size: 1.8rem;
                 font-weight: bold;
                 color: #9333ea;
                 margin-bottom: 4px;
             }
-            
             .perfil-stat-label {
                 color: #64748b;
                 font-size: 0.85rem;
             }
-            
             .perfil-bio {
                 margin: 30px 0;
                 padding: 20px;
                 background: #f8fafc;
                 border-radius: 12px;
             }
-            
             .perfil-bio h3 {
                 margin: 0 0 12px 0;
                 color: #1e293b;
                 font-size: 1.1rem;
             }
-            
             .perfil-bio p {
                 margin: 0;
                 color: #475569;
                 line-height: 1.6;
             }
-            
             .perfil-contato {
                 margin: 30px 0;
             }
-            
             .perfil-contato h3 {
                 margin: 0 0 16px 0;
                 color: #1e293b;
                 font-size: 1.1rem;
             }
-            
             .contato-item {
                 display: flex;
                 align-items: center;
@@ -382,32 +354,26 @@ function adicionarEstilosPerfil() {
                 padding: 12px 0;
                 border-bottom: 1px solid #f1f5f9;
             }
-            
             .contato-item:last-child {
                 border-bottom: none;
             }
-            
             .contato-item i {
                 width: 24px;
                 color: #9333ea;
             }
-            
             .perfil-badges {
                 margin: 30px 0;
             }
-            
             .perfil-badges h3 {
                 margin: 0 0 16px 0;
                 color: #1e293b;
                 font-size: 1.1rem;
             }
-            
             .perfil-badges-grid {
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 gap: 12px;
             }
-            
             .perfil-badge-item {
                 aspect-ratio: 1;
                 background: linear-gradient(135deg, #9333ea, #ec4899);
@@ -421,33 +387,27 @@ function adicionarEstilosPerfil() {
                 cursor: pointer;
                 transition: transform 0.3s ease;
             }
-            
             .perfil-badge-item:hover {
                 transform: scale(1.05);
             }
-            
             .perfil-badge-item small {
                 font-size: 0.7rem;
                 margin-top: 4px;
                 opacity: 0.9;
             }
-            
             .perfil-historico {
                 margin: 30px 0;
             }
-            
             .perfil-historico h3 {
                 margin: 0 0 16px 0;
                 color: #1e293b;
                 font-size: 1.1rem;
             }
-            
             .eventos-recentes {
                 display: flex;
                 flex-direction: column;
                 gap: 12px;
             }
-            
             .evento-recente {
                 display: flex;
                 justify-content: space-between;
@@ -456,22 +416,18 @@ function adicionarEstilosPerfil() {
                 background: #f8fafc;
                 border-radius: 8px;
             }
-            
             .evento-recente-info {
                 flex: 1;
             }
-            
             .evento-recente-titulo {
                 font-weight: 600;
                 color: #1e293b;
                 margin-bottom: 4px;
             }
-            
             .evento-recente-data {
                 font-size: 0.85rem;
                 color: #64748b;
             }
-            
             .evento-recente-status {
                 display: flex;
                 align-items: center;
@@ -479,17 +435,14 @@ function adicionarEstilosPerfil() {
                 font-size: 0.85rem;
                 color: #64748b;
             }
-            
             .perfil-configuracoes {
                 margin: 30px 0 0 0;
             }
-            
             .perfil-configuracoes h3 {
                 margin: 0 0 16px 0;
                 color: #1e293b;
                 font-size: 1.1rem;
             }
-            
             .configuracoes-lista {
                 display: flex;
                 flex-direction: column;
@@ -498,7 +451,6 @@ function adicionarEstilosPerfil() {
                 border-radius: 8px;
                 overflow: hidden;
             }
-            
             .configuracao-item {
                 display: flex;
                 align-items: center;
@@ -510,34 +462,27 @@ function adicionarEstilosPerfil() {
                 cursor: pointer;
                 transition: background 0.2s ease;
             }
-            
             .configuracao-item:hover {
                 background: #f8fafc;
             }
-            
             .configuracao-item i:first-child {
                 width: 24px;
                 color: #9333ea;
             }
-            
             .configuracao-item span {
                 flex: 1;
                 color: #334155;
                 font-size: 0.95rem;
             }
-            
             .configuracao-item i:last-child {
                 color: #cbd5e1;
             }
-            
             .configuracao-sair {
                 color: #ef4444;
             }
-            
             .configuracao-sair i:first-child {
                 color: #ef4444;
             }
-            
             .configuracao-sair span {
                 color: #ef4444;
             }
@@ -563,7 +508,7 @@ function configurarNotificacoes() {
 }
 
 function ajudaSuporte() {
-    mostrarToast('📞 Ajuda e suporte em desenvolvimento!');
+    mostrarToast('❓ Ajuda e suporte em desenvolvimento!');
 }
 
 function sairDaConta() {

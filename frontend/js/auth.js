@@ -1,28 +1,27 @@
 const API_BASE = 'http://localhost:3000/api';
 let usuarioLogado = null;
 
-// FUNÇÃO CENTRAL PARA MUDAR TELAS - MANTENHA ESTA!
+// FUNÇÃO CENTRAL PARA MUDAR TELAS
 function mudarTela(novaTela) {
     console.log('🔄 Mudando para tela:', novaTela);
-    
-    // Esconder todas as telas
+
     document.querySelectorAll('.tela').forEach(tela => {
         tela.classList.remove('ativa');
     });
-    
-    // Mostrar nova tela
+
     const telaAlvo = document.getElementById(`tela-${novaTela}`);
+    
     if (telaAlvo) {
         telaAlvo.classList.add('ativa');
         console.log('✅ Tela mostrada:', novaTela);
-        
-        // Carregar conteúdo específico se necessário
+
         if (novaTela === 'usuario-final') {
             inicializarTelaUsuarioFinal();
         }
     } else {
         console.error('❌ Tela não encontrada:', novaTela);
-    } 
+    }
+
     switch(novaTela) {
         case 'usuario-final':
             if (typeof inicializarUsuarioFinal === 'function') inicializarUsuarioFinal();
@@ -37,19 +36,15 @@ function mudarTela(novaTela) {
             if (typeof inicializarParceiro === 'function') inicializarParceiro();
             break;
     }
-
 }
 
 // ==================== AUTENTICAÇÃO ====================
-
-// Gerenciamento de login
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Página carregada - Verificando autenticação...');
-    
-    // Verificar elementos DOM
+
     const formLogin = document.getElementById('form-login');
     const formCadastro = document.getElementById('form-cadastro');
-    
+
     if (formLogin) {
         formLogin.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -62,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await fazerLogin(email, senha);
         });
     }
-    
+
     if (formCadastro) {
         formCadastro.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -76,9 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
             await fazerCadastro(nome, email, senha, tipo_perfil);
         });
     }
-    
-    // Verificar se já está logado
+
     const usuarioSalvo = localStorage.getItem('usuarioLogado');
+    
     if (usuarioSalvo) {
         usuarioLogado = JSON.parse(usuarioSalvo);
         console.log('🔑 Usuário já logado:', usuarioLogado.nome);
@@ -102,7 +97,6 @@ async function fazerLogin(email, senha) {
         });
 
         console.log('📨 Status da resposta:', response.status);
-
         const data = await response.json();
         console.log('📊 Dados da resposta:', data);
 
@@ -152,9 +146,6 @@ async function fazerCadastro(nome, email, senha, tipo_perfil) {
 }
 
 // ==================== NAVEGAÇÃO ENTRE TELAS ====================
-
-// REMOVA estas funções do HTML e use apenas estas:
-
 function mostrarLogin() {
     console.log('👤 Mostrando tela de login');
     mudarTela('login');
@@ -184,7 +175,6 @@ function voltarParaSeletor() {
 }
 
 // ==================== ENTRAR EM PERFIS ====================
-
 function entrarComoUsuarioFinal() {
     console.log('🎯 Entrando como Usuário Final');
     mudarTela('usuario-final');
@@ -206,11 +196,9 @@ function entrarComoParceiro() {
 }
 
 // ==================== FUNÇÕES DA TELA USUÁRIO FINAL ====================
-
 function inicializarTelaUsuarioFinal() {
     console.log('📱 Inicializando tela do usuário final...');
     
-    // Se já existir JavaScript específico, use-o
     if (typeof inicializarUsuarioFinal === 'function') {
         console.log('📡 Usando módulo específico do usuário');
         inicializarUsuarioFinal();
@@ -220,12 +208,11 @@ function inicializarTelaUsuarioFinal() {
     }
 }
 
-// Carregar eventos básicos para a tela de usuário
 async function carregarEventosBasicos() {
     try {
         console.log('📡 Tentando carregar eventos da API...');
-        
         const response = await fetch(`${API_BASE}/eventos`);
+        
         if (response.ok) {
             const eventos = await response.json();
             exibirEventos(eventos);
@@ -240,19 +227,22 @@ async function carregarEventosBasicos() {
 
 function exibirEventos(eventos) {
     const container = document.getElementById('lista-eventos-usuario');
+    
     if (!container) {
         console.error('❌ Container de eventos não encontrado');
         return;
     }
-    
+
     if (!eventos || eventos.length === 0) {
         container.innerHTML = '<p class="sem-eventos">Nenhum evento encontrado</p>';
         return;
     }
-    
+
     container.innerHTML = eventos.map(evento => `
         <div class="evento-card">
-            <div class="evento-imagem" style="background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)})">
+            <div class="evento-imagem" style="background: linear-gradient(135deg, 
+                #${Math.floor(Math.random()*16777215).toString(16)},
+                #${Math.floor(Math.random()*16777215).toString(16)})">
                 ${evento.destaque ? '<span class="evento-destaque">Destaque</span>' : ''}
             </div>
             <div class="evento-conteudo">
@@ -276,14 +266,14 @@ function exibirEventos(eventos) {
             </div>
         </div>
     `).join('');
-    
+
     console.log(`✅ ${eventos.length} eventos exibidos`);
 }
 
 function exibirEventosDemo() {
     const container = document.getElementById('lista-eventos-usuario');
     if (!container) return;
-    
+
     container.innerHTML = `
         <div class="evento-card">
             <div class="evento-imagem" style="background: linear-gradient(135deg, #9333ea, #ec4899)">
@@ -309,7 +299,6 @@ function exibirEventosDemo() {
                 </div>
             </div>
         </div>
-        
         <div class="evento-card">
             <div class="evento-imagem" style="background: linear-gradient(135deg, #4f46e5, #6366f1)">
                 <span class="evento-destaque">Popular</span>
@@ -335,7 +324,7 @@ function exibirEventosDemo() {
             </div>
         </div>
     `;
-    
+
     console.log('✅ Eventos demo exibidos');
 }
 
@@ -344,40 +333,33 @@ function verDetalhesEvento(eventoId) {
 }
 
 // ==================== FUNÇÕES AUXILIARES ====================
-
-// Funções para navegação dentro da tela do usuário
 function mudarParaHomeUsuario() {
     console.log('🏠 Mudando para Home');
-    // Implementar se necessário
 }
 
 function mudarParaBuscaUsuario() {
     console.log('🔍 Mudando para Busca');
-    // Implementar se necessário
 }
 
 function mudarParaFavoritosUsuario() {
     console.log('❤️ Mudando para Favoritos');
-    // Implementar se necessário
 }
 
 function mudarParaPerfilUsuario() {
     console.log('👤 Mudando para Perfil');
-    // Implementar se necessário
 }
 
 function mostrarNotificacoes() {
     console.log('🔔 Mostrando notificações');
-    alert('Notificações:\n\n• Novo evento adicionado\n• Seu inguito foi confirmado\n• Promoção especial disponível');
+    alert('Notificações:\n\n• Novo evento adicionado\n• Seu ingresso foi confirmado\n• Promoção especial disponível');
 }
 
-console.log('✅ Auth.js carregado completamente'); 
-  
-// ==================== FUNÇÕES DE NAVEGAÇÃO PARA TELAS SECUNDÁRIAS ====================
+console.log('✅ Auth.js carregado completamente');
 
-// Estas funções já devem existir, mas vamos garantir
+// ==================== FUNÇÕES DE NAVEGAÇÃO PARA TELAS SECUNDÁRIAS ====================
 window.mudarParaPerfilUsuario = function() {
     console.log('👤 Navegando para perfil do usuário');
+    
     if (typeof abrirPerfilUsuario === 'function') {
         abrirPerfilUsuario();
     } else {
@@ -387,6 +369,7 @@ window.mudarParaPerfilUsuario = function() {
 
 window.mudarParaFavoritosUsuario = function() {
     console.log('❤️ Navegando para favoritos');
+    
     if (typeof abrirFavoritos === 'function') {
         abrirFavoritos();
     } else {
@@ -394,17 +377,14 @@ window.mudarParaFavoritosUsuario = function() {
     }
 };
 
-// Se já existirem no usuario-final.js, estas funções servirão como fallback
 if (typeof window.mostrarNotificacoes !== 'function') {
     window.mostrarNotificacoes = function() {
         alert('🔔 Notificações:\n\n• Novo evento adicionado\n• Promoção especial disponível\n• Seu check-in foi confirmado');
     };
 }
 
-// Função de toast genérica (usada por vários módulos)
 if (typeof window.mostrarToast !== 'function') {
     window.mostrarToast = function(mensagem) {
-        // Criar elemento de toast
         const toast = document.createElement('div');
         toast.className = 'toast-mensagem';
         toast.textContent = mensagem;
@@ -422,8 +402,7 @@ if (typeof window.mostrarToast !== 'function') {
         `;
         
         document.body.appendChild(toast);
-        
-        // Remover após 3 segundos
+
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.remove();

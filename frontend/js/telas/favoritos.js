@@ -14,26 +14,23 @@ function abrirFavoritos() {
 
 async function carregarFavoritos() {
     try {
-        // Buscar favoritos do localStorage
         const favoritosIds = JSON.parse(localStorage.getItem('favoritos_usuario') || '[]');
         
         if (favoritosIds.length === 0) {
             estadoFavoritos.eventos = [];
             return;
         }
-        
-        // Simulação de eventos favoritados
+
         const todosEventos = await obterTodosEventosFavoritos();
         estadoFavoritos.eventos = todosEventos.filter(evento => 
             favoritosIds.includes(evento.id)
         );
-        
-        // Extrair categorias favoritas
+
         const categoriasCount = {};
         estadoFavoritos.eventos.forEach(evento => {
             categoriasCount[evento.categoria] = (categoriasCount[evento.categoria] || 0) + 1;
         });
-        
+
         estadoFavoritos.categoriasFavoritas = Object.entries(categoriasCount)
             .sort((a, b) => b[1] - a[1])
             .map(([categoria]) => categoria);
@@ -45,8 +42,9 @@ async function carregarFavoritos() {
 
 function carregarTelaFavoritos() {
     const tela = document.getElementById('tela-favoritos');
-    if (!tela) return;
     
+    if (!tela) return;
+
     tela.innerHTML = `
         <!-- Header -->
         <div class="header">
@@ -97,32 +95,28 @@ function carregarTelaFavoritos() {
                 
                 <div id="lista-favoritos" class="eventos-lista">
                     ${estadoFavoritos.eventos.length === 0 ? `
-                        <div class="sem-favoritos">
-                            <i class="fas fa-heart" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 16px;"></i>
-                            <p>Você ainda não tem eventos favoritados</p>
-                            <p class="texto-secundario">Explore eventos e clique no ❤️ para adicionar aos favoritos</p>
-                            <button class="btn btn-primary" onclick="voltarParaHomeFavoritos()">
-                                <i class="fas fa-compass"></i> Explorar Eventos
-                            </button>
-                        </div>
+                    <div class="sem-favoritos">
+                        <i class="fas fa-heart" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 16px;"></i>
+                        <p>Você ainda não tem eventos favoritados</p>
+                        <p class="texto-secundario">Explore eventos e clique no ❤️ para adicionar aos favoritos</p>
+                        <button class="btn btn-primary" onclick="voltarParaHomeFavoritos()">
+                            <i class="fas fa-compass"></i> Explorar Eventos
+                        </button>
+                    </div>
                     ` : ''}
                 </div>
             </div>
         </div>
     `;
-    
-    // Adicionar estilos específicos
+
     adicionarEstilosFavoritos();
-    
-    // Exibir favoritos
     exibirFavoritos();
-    
-    // Mudar para esta tela
     mudarTela('favoritos');
 }
 
 function adicionarEstilosFavoritos() {
     const styleId = 'estilos-favoritos';
+    
     if (!document.getElementById(styleId)) {
         const style = document.createElement('style');
         style.id = styleId;
@@ -131,7 +125,6 @@ function adicionarEstilosFavoritos() {
                 padding: 16px;
                 padding-bottom: 80px;
             }
-            
             .estatisticas-favoritos {
                 background: white;
                 border-radius: 12px;
@@ -139,7 +132,6 @@ function adicionarEstilosFavoritos() {
                 margin-bottom: 20px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
-            
             .card-estatistica-favoritos {
                 text-align: center;
                 padding: 20px;
@@ -148,30 +140,25 @@ function adicionarEstilosFavoritos() {
                 border-radius: 12px;
                 margin-bottom: 20px;
             }
-            
             .card-estatistica-favoritos .estatistica-valor {
                 font-size: 3rem;
                 font-weight: bold;
                 margin-bottom: 8px;
             }
-            
             .card-estatistica-favoritos .estatistica-label {
                 font-size: 1rem;
                 opacity: 0.9;
             }
-            
             .categorias-favoritas h3 {
                 margin: 0 0 12px 0;
                 color: #1e293b;
                 font-size: 1rem;
             }
-            
             .categorias-tags {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px;
             }
-            
             .categoria-tag {
                 background: #f3e8ff;
                 color: #9333ea;
@@ -180,27 +167,23 @@ function adicionarEstilosFavoritos() {
                 font-size: 0.85rem;
                 font-weight: 500;
             }
-            
             .favoritos-lista-container {
                 background: white;
                 border-radius: 12px;
                 padding: 20px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
-            
             .favoritos-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 20px;
             }
-            
             .favoritos-header h3 {
                 margin: 0;
                 color: #1e293b;
                 font-size: 1.1rem;
             }
-            
             .btn-limpar-favoritos {
                 background: #fee2e2;
                 color: #dc2626;
@@ -214,21 +197,17 @@ function adicionarEstilosFavoritos() {
                 gap: 6px;
                 transition: background 0.2s ease;
             }
-            
             .btn-limpar-favoritos:hover {
                 background: #fecaca;
             }
-            
             .sem-favoritos {
                 text-align: center;
                 padding: 40px 20px;
                 color: #64748b;
             }
-            
             .sem-favoritos .btn {
                 margin-top: 16px;
             }
-            
             /* Cards de favoritos específicos */
             .evento-card-favorito {
                 background: white;
@@ -239,11 +218,9 @@ function adicionarEstilosFavoritos() {
                 border: 2px solid #f3e8ff;
                 position: relative;
             }
-            
             .evento-card-favorito:hover {
                 border-color: #9333ea;
             }
-            
             .evento-card-favorito .favorito-remover {
                 position: absolute;
                 top: 12px;
@@ -261,36 +238,30 @@ function adicionarEstilosFavoritos() {
                 z-index: 2;
                 transition: all 0.3s ease;
             }
-            
             .evento-card-favorito .favorito-remover:hover {
                 background: #fee2e2;
                 transform: scale(1.1);
             }
-            
             .evento-card-favorito .evento-imagem-favorito {
                 height: 120px;
                 background: linear-gradient(135deg, #9333ea, #ec4899);
                 position: relative;
             }
-            
             .evento-card-favorito .evento-conteudo-favorito {
                 padding: 16px;
             }
-            
             .evento-card-favorito .evento-cabecalho-favorito {
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
                 margin-bottom: 12px;
             }
-            
             .evento-card-favorito .evento-titulo-favorito {
                 font-size: 1rem;
                 font-weight: 600;
                 color: #1e293b;
                 margin-bottom: 4px;
             }
-            
             .evento-card-favorito .evento-categoria-favorito {
                 font-size: 0.75rem;
                 color: #9333ea;
@@ -299,7 +270,6 @@ function adicionarEstilosFavoritos() {
                 border-radius: 10px;
                 display: inline-block;
             }
-            
             .evento-card-favorito .evento-info-favorito {
                 display: flex;
                 flex-direction: column;
@@ -308,13 +278,11 @@ function adicionarEstilosFavoritos() {
                 color: #64748b;
                 font-size: 0.875rem;
             }
-            
             .evento-card-favorito .evento-rodape-favorito {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
             }
-            
             .evento-card-favorito .evento-preco-favorito {
                 font-size: 1.125rem;
                 font-weight: bold;
@@ -326,7 +294,6 @@ function adicionarEstilosFavoritos() {
 }
 
 async function obterTodosEventosFavoritos() {
-    // Simulação de eventos
     return [
         {
             id: 1,
@@ -363,16 +330,15 @@ async function obterTodosEventosFavoritos() {
 
 function exibirFavoritos() {
     const container = document.getElementById('lista-favoritos');
-    if (!container || estadoFavoritos.eventos.length === 0) return;
     
+    if (!container || estadoFavoritos.eventos.length === 0) return;
+
     container.innerHTML = estadoFavoritos.eventos.map(evento => `
         <div class="evento-card-favorito" onclick="verDetalhesFavorito(${evento.id})">
             <div class="favorito-remover" onclick="event.stopPropagation(); removerFavorito(${evento.id})">
                 <i class="fas fa-times"></i>
             </div>
-            
             <div class="evento-imagem-favorito"></div>
-            
             <div class="evento-conteudo-favorito">
                 <div class="evento-cabecalho-favorito">
                     <div>
@@ -380,13 +346,11 @@ function exibirFavoritos() {
                         <span class="evento-categoria-favorito">${evento.categoria}</span>
                     </div>
                 </div>
-                
                 <div class="evento-info-favorito">
                     <div><i class="fas fa-calendar-alt"></i> ${formatarDataFavorito(evento.data_evento)} • ${evento.hora_evento}</div>
                     <div><i class="fas fa-map-marker-alt"></i> ${evento.local}</div>
                     ${evento.descricao ? `<div>${evento.descricao.substring(0, 50)}...</div>` : ''}
                 </div>
-                
                 <div class="evento-rodape-favorito">
                     <div class="evento-preco-favorito">R$ ${evento.preco.toFixed(2)}</div>
                     <button class="btn btn-primary" onclick="event.stopPropagation(); verDetalhesFavorito(${evento.id})">
@@ -400,6 +364,7 @@ function exibirFavoritos() {
 
 function formatarDataFavorito(dataString) {
     if (!dataString) return '';
+    
     const data = new Date(dataString + 'T00:00:00');
     return data.toLocaleDateString('pt-BR', {
         day: '2-digit',
@@ -417,23 +382,17 @@ function verDetalhesFavorito(eventoId) {
 
 function removerFavorito(eventoId) {
     if (confirm('Remover este evento dos favoritos?')) {
-        // Remover do localStorage
         const favoritos = JSON.parse(localStorage.getItem('favoritos_usuario') || '[]');
         const index = favoritos.indexOf(eventoId);
+        
         if (index > -1) {
             favoritos.splice(index, 1);
             localStorage.setItem('favoritos_usuario', JSON.stringify(favoritos));
         }
-        
-        // Remover da lista local
+
         estadoFavoritos.eventos = estadoFavoritos.eventos.filter(evento => evento.id !== eventoId);
-        
-        // Atualizar exibição
         exibirFavoritos();
-        
-        // Atualizar estatísticas
         carregarTelaFavoritos();
-        
         mostrarToast('🤍 Evento removido dos favoritos');
     }
 }
@@ -442,16 +401,10 @@ function limparTodosFavoritos() {
     if (estadoFavoritos.eventos.length === 0) return;
     
     if (confirm('Tem certeza que deseja remover TODOS os eventos dos favoritos?')) {
-        // Limpar localStorage
         localStorage.removeItem('favoritos_usuario');
-        
-        // Limpar lista local
         estadoFavoritos.eventos = [];
         estadoFavoritos.categoriasFavoritas = [];
-        
-        // Atualizar exibição
         carregarTelaFavoritos();
-        
         mostrarToast('🧹 Todos os favoritos foram removidos');
     }
 }
@@ -462,6 +415,7 @@ function organizarFavoritos() {
     
     if (escolha) {
         const index = parseInt(escolha) - 1;
+        
         if (index >= 0 && index < opcoes.length) {
             const criterio = opcoes[index].toLowerCase();
             

@@ -13,18 +13,15 @@
         <div class="login-container">
             <h1 class="login-titulo">Agenda THE</h1>
             <p class="login-subtitulo">Faça login para continuar</p>
-            
             <form id="form-login" class="login-form">
                 <input type="email" id="login-email" placeholder="Email" required>
                 <input type="password" id="login-senha" placeholder="Senha" required>
                 <button type="submit" class="btn-login">Entrar</button>
             </form>
-            
             <div class="login-links">
-                <a href="#" onclick="mostrarCadastro()">Criar conta</a>
+                <a href="#" onclick="mostrarCadastro(); return false;">Criar conta</a>
                 <a href="#">Esqueci a senha</a>
             </div>
-            
             <div class="demo-accounts">
                 <h3>Contas de Demonstração:</h3>
                 <div class="demo-account" onclick="preencherDemo('usuario@email.com', '123456')">
@@ -47,25 +44,21 @@
     <div id="tela-cadastro" class="tela">
         <div class="login-container">
             <h1 class="login-titulo">Criar Conta</h1>
-            
             <form id="form-cadastro" class="login-form">
                 <input type="text" id="cadastro-nome" placeholder="Nome completo" required>
                 <input type="email" id="cadastro-email" placeholder="Email" required>
                 <input type="password" id="cadastro-senha" placeholder="Senha" required>
-                
                 <label for="cadastro-perfil">Tipo de Perfil:</label>
                 <select id="cadastro-perfil" required>
-                    <option value="usuario_final"><i class="fas fa-user"></i> Usuário Final</option>
-                    <option value="produtor"><i class="fas fa-calendar-alt"></i> Produtor/Organizador</option>
-                    <option value="curador"><i class="fas fa-check-circle"></i> Curador/Admin</option>
-                    <option value="parceiro"><i class="fas fa-handshake"></i> Parceiro Local</option>
+                    <option value="usuario_final">Usuário Final</option>
+                    <option value="produtor">Produtor/Organizador</option>
+                    <option value="curador">Curador/Admin</option>
+                    <option value="parceiro">Parceiro Local</option>
                 </select>
-                
                 <button type="submit" class="btn-login">Criar Conta</button>
             </form>
-            
             <div class="login-links">
-                <a href="#" onclick="mostrarLogin()">Já tenho uma conta</a>
+                <a href="#" onclick="mostrarLogin(); return false;">Já tenho uma conta</a>
             </div>
         </div>
     </div>
@@ -77,12 +70,10 @@
                 <h1>Agenda THE</h1>
                 <button class="btn-logout" onclick="fazerLogout()">Sair</button>
             </div>
-            
             <div class="usuario-info">
                 <h2>Bem-vindo, <span id="nome-usuario">Usuário</span>!</h2>
                 <p>Selecione o que deseja fazer:</p>
             </div>
-            
             <div class="botoes-perfil">
                 <button class="btn-perfil btn-final" onclick="entrarComoUsuarioFinal()">
                     <span class="perfil-icone"><i class="fas fa-user"></i></span>
@@ -92,7 +83,6 @@
                     </div>
                     <span class="perfil-seta"><i class="fas fa-chevron-right"></i></span>
                 </button>
-
                 <button class="btn-perfil btn-produtor" onclick="entrarComoProdutor()">
                     <span class="perfil-icone"><i class="fas fa-calendar-alt"></i></span>
                     <div class="perfil-info">
@@ -101,7 +91,6 @@
                     </div>
                     <span class="perfil-seta"><i class="fas fa-chevron-right"></i></span>
                 </button>
-
                 <button class="btn-perfil btn-curador" onclick="entrarComoCurador()">
                     <span class="perfil-icone"><i class="fas fa-check-circle"></i></span>
                     <div class="perfil-info">
@@ -110,7 +99,6 @@
                     </div>
                     <span class="perfil-seta"><i class="fas fa-chevron-right"></i></span>
                 </button>
-
                 <button class="btn-perfil btn-parceiro" onclick="entrarComoParceiro()">
                     <span class="perfil-icone"><i class="fas fa-handshake"></i></span>
                     <div class="perfil-info">
@@ -137,20 +125,19 @@
                     <span class="icone" onclick="mudarParaPerfilUsuario()"><i class="fas fa-user"></i></span>
                 </div>
             </div>
-            
             <div class="busca-container">
                 <span class="busca-icone"><i class="fas fa-search"></i></span>
                 <input type="text" class="busca-input" placeholder="Buscar eventos..." id="campo-busca-usuario">
             </div>
         </div>
-    
+
         <!-- Categorias -->
         <div class="categorias-container">
             <div class="categorias" id="lista-categorias-usuario">
                 <!-- Categorias carregadas via JS -->
             </div>
         </div>
-    
+
         <!-- Conteúdo Principal -->
         <div class="conteudo-usuario">
             <h2 class="secao-titulo">Eventos em Destaque</h2>
@@ -158,7 +145,7 @@
                 <!-- Eventos carregados via JS -->
             </div>
         </div>
-    
+
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
             <div class="nav-item ativa" onclick="mudarParaHomeUsuario()">
@@ -193,12 +180,12 @@
                     <span class="icone" onclick="voltarParaSeletor()"><i class="fas fa-sign-out-alt"></i></span>
                 </div>
             </div>
-            
             <div class="busca-container">
                 <span class="busca-icone"><i class="fas fa-search"></i></span>
                 <input type="text" class="busca-input" placeholder="Buscar meus eventos...">
             </div>
-        </div> 
+        </div>
+
         <div class="abas-container">
             <div class="abas" id="abas-produtor">
                 <button class="aba ativa" onclick="mudarAbaProdutor('meus-eventos')">
@@ -221,7 +208,7 @@
                     <!-- Eventos do produtor -->
                 </div>
             </div>
-            
+
             <div id="aba-criar-evento" class="aba-conteudo">
                 <h2 class="secao-titulo">Criar Novo Evento</h2>
                 <div class="form-container">
@@ -246,26 +233,27 @@
                     </form>
                 </div>
             </div>
-            
+
             <div id="aba-estatisticas" class="aba-conteudo">
                 <h2 class="secao-titulo">Estatísticas</h2>
                 <div class="cards-estatisticas">
                     <div class="card-estatistica">
-                        <div class="estatistica-valor">12</div>
+                        <div class="estatistica-valor" id="estatistica-eventos">0</div>
                         <div class="estatistica-label">Eventos Criados</div>
                     </div>
                     <div class="card-estatistica">
-                        <div class="estatistica-valor">1,254</div>
+                        <div class="estatistica-valor" id="estatistica-ingressos">0</div>
                         <div class="estatistica-label">Ingressos Vendidos</div>
                     </div>
                     <div class="card-estatistica">
-                        <div class="estatistica-valor">R$ 8,540</div>
+                        <div class="estatistica-valor" id="estatistica-faturamento">R$ 0</div>
                         <div class="estatistica-label">Faturamento</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Tela Curador -->
     <div id="tela-curador" class="tela">
         <div class="header">
@@ -285,7 +273,7 @@
         <div class="abas-container">
             <div class="abas" id="abas-curador">
                 <button class="aba ativa" onclick="mudarAbaCurador('pendentes')">
-                    <i class="fas fa-clock"></i> Pendentes <span class="badge">5</span>
+                    <i class="fas fa-clock"></i> Pendentes <span class="badge" id="badge-pendentes">0</span>
                 </button>
                 <button class="aba" onclick="mudarAbaCurador('aprovados')">
                     <i class="fas fa-check-circle"></i> Aprovados
@@ -304,14 +292,14 @@
                     <!-- Eventos pendentes -->
                 </div>
             </div>
-            
+
             <div id="aba-aprovados" class="aba-conteudo">
                 <h2 class="secao-titulo">Eventos Aprovados</h2>
                 <div id="lista-eventos-aprovados" class="eventos-lista">
                     <!-- Eventos aprovados -->
                 </div>
             </div>
-            
+
             <div id="aba-rejeitados" class="aba-conteudo">
                 <h2 class="secao-titulo">Eventos Rejeitados</h2>
                 <div id="lista-eventos-rejeitados" class="eventos-lista">
@@ -320,13 +308,14 @@
             </div>
         </div>
     </div>
+
     <!-- Tela Parceiro -->
     <div id="tela-parceiro" class="tela">
         <div class="header">
             <div class="header-topo">
                 <div>
                     <h1 class="header-titulo">Área do Parceiro</h1>
-                    <p class="header-localizacao">Patrocínios e Campanhas</p>
+                    <p class="header-localizacao">Patrocinar eventos</p>
                 </div>
                 <div class="header-icones">
                     <span class="icone" onclick="mostrarNotificacoes()"><i class="fas fa-bell"></i></span>
@@ -342,7 +331,7 @@
                     <i class="fas fa-bullhorn"></i> Minhas Campanhas
                 </button>
                 <button class="aba" onclick="mudarAbaParceiro('eventos-disponiveis')">
-                    <i class="fas fa-calendar-check"></i> Eventos para Patrocinar
+                    <i class="fas fa-calendar"></i> Eventos Disponíveis
                 </button>
                 <button class="aba" onclick="mudarAbaParceiro('relatorios')">
                     <i class="fas fa-chart-line"></i> Relatórios
@@ -353,141 +342,76 @@
         <!-- Conteúdo das Abas -->
         <div class="conteudo-parceiro">
             <div id="aba-campanhas" class="aba-conteudo ativa">
-                <h2 class="secao-titulo">Minhas Campanhas de Patrocínio</h2>
-                <button class="btn btn-primary" onclick="criarNovaCampanha()">
-                    <i class="fas fa-plus"></i> Nova Campanha
-                </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="secao-titulo">Minhas Campanhas</h2>
+                    <button class="btn btn-primary" onclick="criarNovaCampanha()">
+                        <i class="fas fa-plus"></i> Nova Campanha
+                    </button>
+                </div>
                 <div id="lista-campanhas" class="campanhas-lista">
-                    <!-- Campanhas do parceiro -->
+                    <!-- Campanhas carregadas via JS -->
                 </div>
             </div>
-            
+
             <div id="aba-eventos-disponiveis" class="aba-conteudo">
                 <h2 class="secao-titulo">Eventos Disponíveis para Patrocínio</h2>
                 <div id="lista-eventos-parceiro" class="eventos-lista">
                     <!-- Eventos disponíveis -->
                 </div>
             </div>
-            
+
             <div id="aba-relatorios" class="aba-conteudo">
-                <h2 class="secao-titulo">Relatórios de Investimento</h2>
+                <h2 class="secao-titulo">Relatórios</h2>
                 <div class="cards-estatisticas">
                     <div class="card-estatistica">
-                        <div class="estatistica-valor">8</div>
+                        <div class="estatistica-valor" id="estatistica-campanhas">0</div>
                         <div class="estatistica-label">Campanhas Ativas</div>
                     </div>
                     <div class="card-estatistica">
-                        <div class="estatistica-valor">R$ 15,000</div>
-                        <div class="estatistica-label">Investido</div>
+                        <div class="estatistica-valor" id="estatistica-investimento">R$ 0</div>
+                        <div class="estatistica-label">Investimento Total</div>
                     </div>
                     <div class="card-estatistica">
-                        <div class="estatistica-valor">42,500</div>
+                        <div class="estatistica-valor" id="estatistica-visualizacoes">0</div>
                         <div class="estatistica-label">Visualizações</div>
                     </div>
                 </div>
             </div>
         </div>
-    </div> 
-      <!-- ==================== TELAS SECUNDÁRIAS ==================== -->
-    
-    <!-- Tela Detalhes do Evento -->
+    </div>
+
+    <!-- Tela Detalhes Evento -->
     <div id="tela-detalhes-evento" class="tela">
-        <!-- Conteúdo será carregado dinamicamente -->
-    </div>
-
-    <!-- Tela Perfil do Usuário -->
-    <div id="tela-perfil-usuario" class="tela">
-        <!-- Conteúdo será carregado dinamicamente -->
-    </div>
-
-    <!-- Tela Busca Avançada -->
-    <div id="tela-busca-avancada" class="tela">
-        <!-- Conteúdo será carregado dinamicamente -->
+        <!-- Será preenchida via JavaScript -->
     </div>
 
     <!-- Tela Favoritos -->
     <div id="tela-favoritos" class="tela">
-        <!-- Conteúdo será carregado dinamicamente -->
+        <!-- Será preenchida via JavaScript -->
+    </div>
+
+    <!-- Tela Perfil Usuário -->
+    <div id="tela-perfil-usuario" class="tela">
+        <!-- Será preenchida via JavaScript -->
+    </div>
+
+    <!-- Tela Busca Avançada -->
+    <div id="tela-busca-avancada" class="tela">
+        <!-- Será preenchida via JavaScript -->
     </div>
 
     <!-- Scripts -->
     <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/perfis/usuario-final.js"></script>
+    <script src="js/evento.js"></script>
+    <script src="js/recompensa.js"></script>
     <script src="js/perfis/produtor.js"></script>
     <script src="js/perfis/curador.js"></script>
-    <script src="js/perfis/parceiro.js"></script> 
-     <!-- Telas secundárias -->
-     <script src="js/telas/detalhes-evento.js"></script>
-     <script src="js/telas/perfil-usuario.js"></script>
-     <script src="js/telas/busca-avancada.js"></script>
-     <script src="js/telas/favoritos.js"></script>
-    
-    <!-- Script Inicial -->
-    <script>
-        // Funções básicas para navegação
-        function mostrarCadastro() {
-            document.getElementById('tela-login').classList.remove('ativa');
-            document.getElementById('tela-cadastro').classList.add('ativa');
-        }
-        
-        function mostrarLogin() {
-            document.getElementById('tela-cadastro').classList.remove('ativa');
-            document.getElementById('tela-login').classList.add('ativa');
-        }
-        
-        function preencherDemo(email, senha) {
-            document.getElementById('login-email').value = email;
-            document.getElementById('login-senha').value = senha;
-        }
-        function mostrarTela(idDaTela) { 
-            const todasAsTelas = document.querySelectorAll('.tela'); 
-            todasAsTelas.forEach(tela => { 
-                tela.classList.remove('ativa'); 
-            }); 
-            const telaParaMostrar = document.getElementById(idDaTela);
-            if (telaParaMostrar) { 
-                telaParaMostrar.classList.add('ativa'); 
-            }
-        }
-        function fazerLogout() {
-            // Esconde todas as telas
-            document.querySelectorAll('.tela').forEach(tela => {
-                tela.classList.remove('ativa');
-            });
-            // Mostra a tela de login
-            document.getElementById('tela-login').classList.add('ativa');
-        }
-        
-        function voltarParaSeletor() {
-            // Esconde todas as telas
-            document.querySelectorAll('.tela').forEach(tela => {
-                tela.classList.remove('ativa');
-            });
-            // Mostra a tela seletora
-            document.getElementById('tela-seletora').classList.add('ativa');
-        }
-        
-        // Funções para entrar em cada perfil
-        function entrarComoUsuarioFinal() {
-            document.getElementById('tela-seletora').classList.remove('ativa');
-            document.getElementById('tela-usuario-final').classList.add('ativa');
-        }
-        
-        function entrarComoProdutor() {
-            document.getElementById('tela-seletora').classList.remove('ativa');
-            document.getElementById('tela-produtor').classList.add('ativa');
-        }
-        
-        function entrarComoCurador() {
-            document.getElementById('tela-seletora').classList.remove('ativa');
-            document.getElementById('tela-curador').classList.add('ativa');
-        }
-        
-        function entrarComoParceiro() {
-            document.getElementById('tela-seletora').classList.remove('ativa');
-            document.getElementById('tela-parceiro').classList.add('ativa');
-        }
-    </script>
+    <script src="js/perfis/parceiro.js"></script>
+    <script src="js/perfis/usuario-final.js"></script>
+    <script src="js/telas/busca-avancada.js"></script>
+    <script src="js/telas/detalhes-evento.js"></script>
+    <script src="js/telas/favoritos.js"></script>
+    <script src="js/telas/perfil-usuario.js"></script>
 </body>
 </html>

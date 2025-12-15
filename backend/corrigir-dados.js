@@ -1,31 +1,29 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-
 const dbPath = path.join(__dirname, 'agenda_the.db');
 const db = new sqlite3.Database(dbPath);
 
-console.log('🔧 Corrigindo dados do banco...');
+console.log('Corrigindo dados do banco...');
 
-// Corrigir eventos
 db.serialize(() => {
     // Atualizar eventos
-    db.run(`UPDATE eventos SET 
+    db.run(`UPDATE eventos SET
         titulo = 'Festival de Jazz',
-        categoria = 'música', 
+        categoria = 'musica',
         hora_evento = '20:00',
         local = 'Parque da Cidade',
         descricao = 'Um incrível festival de jazz com artistas locais e nacionais. Venha curtir uma noite inesquecível!'
         WHERE id = 1`);
-
-    db.run(`UPDATE eventos SET 
+    
+    db.run(`UPDATE eventos SET
         titulo = 'Exposição de Arte Moderna',
         categoria = 'arte',
-        local = 'Museu de Arte Contemporânea', 
+        local = 'Museu de Arte Contemporânea',
         descricao = 'Exposição com obras de artistas contemporâneos renomados.'
         WHERE id = 2`);
-
-    db.run(`UPDATE eventos SET 
-        titulo = 'Peça Teatral: Romeu e Julieta', 
+    
+    db.run(`UPDATE eventos SET
+        titulo = 'Peça Teatral: Romeu e Julieta',
         categoria = 'teatro',
         local = 'Teatro Municipal',
         descricao = 'Clássico de Shakespeare com direção moderna.'
@@ -48,15 +46,15 @@ db.serialize(() => {
     });
 
     // Corrigir recompensas
-    db.run(`UPDATE recompensas SET 
+    db.run(`UPDATE recompensas SET
         nome = '10% OFF em Ingressos',
         descricao = 'Desconto de 10% na próxima compra',
-        custo_pontos = 500 
+        custo_pontos = 500
         WHERE id = 1`);
-
-    db.run(`UPDATE recompensas SET 
+    
+    db.run(`UPDATE recompensas SET
         nome = '15% OFF VIP',
-        descricao = 'Desconto especial de 15%', 
+        descricao = 'Desconto especial de 15%',
         custo_pontos = 800
         WHERE id = 2`);
 

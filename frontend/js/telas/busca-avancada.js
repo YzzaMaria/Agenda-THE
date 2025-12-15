@@ -20,8 +20,9 @@ function abrirBuscaAvancada() {
 
 function carregarTelaBusca() {
     const tela = document.getElementById('tela-busca-avancada');
-    if (!tela) return;
     
+    if (!tela) return;
+
     tela.innerHTML = `
         <!-- Header -->
         <div class="header">
@@ -36,10 +37,9 @@ function carregarTelaBusca() {
                     </span>
                 </div>
             </div>
-            
             <div class="busca-container">
                 <span class="busca-icone"><i class="fas fa-search"></i></span>
-                <input type="text" class="busca-input" placeholder="Buscar eventos..." id="campo-busca-avancada" 
+                <input type="text" class="busca-input" placeholder="Buscar eventos..." id="campo-busca-avancada"
                        value="${estadoBusca.termo}" oninput="atualizarTermoBusca(this.value)">
             </div>
         </div>
@@ -52,7 +52,6 @@ function carregarTelaBusca() {
                     <i class="fas fa-chevron-down"></i>
                 </button>
             </div>
-            
             <div class="filtros-conteudo" id="filtros-conteudo">
                 <!-- Categoria -->
                 <div class="filtro-grupo">
@@ -66,44 +65,44 @@ function carregarTelaBusca() {
                         <option value="esportes" ${estadoBusca.categoria === 'esportes' ? 'selected' : ''}>Esportes</option>
                     </select>
                 </div>
-                
+
                 <!-- Data -->
                 <div class="filtro-grupo">
                     <label>Data</label>
                     <div class="filtro-duplo">
                         <div>
-                            <input type="date" placeholder="Data inicial" id="filtro-data-inicio" 
+                            <input type="date" placeholder="Data inicial" id="filtro-data-inicio"
                                    value="${estadoBusca.dataInicio}" onchange="atualizarDataInicio(this.value)">
                         </div>
                         <div>
-                            <input type="date" placeholder="Data final" id="filtro-data-fim" 
+                            <input type="date" placeholder="Data final" id="filtro-data-fim"
                                    value="${estadoBusca.dataFim}" onchange="atualizarDataFim(this.value)">
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Preço -->
                 <div class="filtro-grupo">
                     <label>Preço (R$)</label>
                     <div class="filtro-duplo">
                         <div>
-                            <input type="number" placeholder="Mínimo" id="filtro-preco-min" 
+                            <input type="number" placeholder="Mínimo" id="filtro-preco-min"
                                    value="${estadoBusca.precoMin}" oninput="atualizarPrecoMin(this.value)">
                         </div>
                         <div>
-                            <input type="number" placeholder="Máximo" id="filtro-preco-max" 
+                            <input type="number" placeholder="Máximo" id="filtro-preco-max"
                                    value="${estadoBusca.precoMax}" oninput="atualizarPrecoMax(this.value)">
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Local -->
                 <div class="filtro-grupo">
                     <label for="filtro-local">Local</label>
-                    <input type="text" id="filtro-local" placeholder="Cidade, bairro..." 
+                    <input type="text" id="filtro-local" placeholder="Cidade, bairro..."
                            value="${estadoBusca.local}" oninput="atualizarLocal(this.value)">
                 </div>
-                
+
                 <!-- Botões -->
                 <div class="filtro-botoes">
                     <button class="btn btn-secondary" onclick="limparFiltros()">
@@ -130,7 +129,6 @@ function carregarTelaBusca() {
                     </select>
                 </div>
             </div>
-            
             <div id="lista-resultados-busca" class="eventos-lista">
                 ${estadoBusca.resultados.length > 0 ? '' : `
                     <div class="sem-resultados">
@@ -142,23 +140,21 @@ function carregarTelaBusca() {
             </div>
         </div>
     `;
-    
-    // Adicionar estilos específicos
+
     adicionarEstilosBusca();
-    
-    // Carregar resultados iniciais
+
     if (estadoBusca.filtrosAplicados) {
         buscarEventos();
     } else {
         carregarTodosEventos();
     }
-    
-    // Mudar para esta tela
+
     mudarTela('busca-avancada');
 }
 
 function adicionarEstilosBusca() {
     const styleId = 'estilos-busca-avancada';
+    
     if (!document.getElementById(styleId)) {
         const style = document.createElement('style');
         style.id = styleId;
@@ -170,7 +166,6 @@ function adicionarEstilosBusca() {
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 overflow: hidden;
             }
-            
             .filtros-header {
                 display: flex;
                 justify-content: space-between;
@@ -178,7 +173,6 @@ function adicionarEstilosBusca() {
                 padding: 16px 20px;
                 border-bottom: 1px solid #f1f5f9;
             }
-            
             .filtros-header h3 {
                 margin: 0;
                 font-size: 1rem;
@@ -187,7 +181,6 @@ function adicionarEstilosBusca() {
                 align-items: center;
                 gap: 8px;
             }
-            
             .btn-filtros-toggle {
                 background: none;
                 border: none;
@@ -196,20 +189,16 @@ function adicionarEstilosBusca() {
                 cursor: pointer;
                 padding: 4px;
             }
-            
             .filtros-conteudo {
                 padding: 20px;
                 display: block;
             }
-            
             .filtros-conteudo.contraido {
                 display: none;
             }
-            
             .filtro-grupo {
                 margin-bottom: 20px;
             }
-            
             .filtro-grupo label {
                 display: block;
                 margin-bottom: 8px;
@@ -217,7 +206,6 @@ function adicionarEstilosBusca() {
                 color: #334155;
                 font-size: 0.9rem;
             }
-            
             .filtro-grupo select,
             .filtro-grupo input {
                 width: 100%;
@@ -227,47 +215,39 @@ function adicionarEstilosBusca() {
                 font-size: 0.9rem;
                 transition: border-color 0.3s ease;
             }
-            
             .filtro-grupo select:focus,
             .filtro-grupo input:focus {
                 outline: none;
                 border-color: #9333ea;
             }
-            
             .filtro-duplo {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 12px;
             }
-            
             .filtro-botoes {
                 display: flex;
                 gap: 12px;
                 margin-top: 24px;
             }
-            
             .filtro-botoes .btn {
                 flex: 1;
                 padding: 12px;
             }
-            
             .resultados-container {
                 margin: 16px;
             }
-            
             .resultados-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 16px;
             }
-            
             .resultados-header h3 {
                 margin: 0;
                 font-size: 1.1rem;
                 color: #1e293b;
             }
-            
             .ordenacao select {
                 padding: 8px 12px;
                 border: 2px solid #e2e8f0;
@@ -276,19 +256,16 @@ function adicionarEstilosBusca() {
                 color: #64748b;
                 background: white;
             }
-            
             .sem-resultados {
                 text-align: center;
                 padding: 60px 20px;
                 color: #64748b;
             }
-            
             .texto-secundario {
                 font-size: 0.9rem;
                 margin-top: 8px;
                 opacity: 0.8;
             }
-            
             /* Cards de resultado específicos */
             .evento-card-busca {
                 background: white;
@@ -298,26 +275,22 @@ function adicionarEstilosBusca() {
                 margin-bottom: 16px;
                 transition: transform 0.3s ease;
             }
-            
             .evento-card-busca:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 4px 16px rgba(0,0,0,0.15);
             }
-            
             .evento-card-busca .evento-header-busca {
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
                 padding: 16px;
             }
-            
             .evento-card-busca .evento-titulo-busca {
                 font-size: 1.1rem;
                 font-weight: 600;
                 color: #1e293b;
                 margin-bottom: 8px;
             }
-            
             .evento-card-busca .evento-categoria-busca {
                 font-size: 0.8rem;
                 color: #9333ea;
@@ -326,7 +299,6 @@ function adicionarEstilosBusca() {
                 border-radius: 20px;
                 display: inline-block;
             }
-            
             .evento-card-busca .evento-info-busca {
                 padding: 0 16px 16px 16px;
                 color: #64748b;
@@ -335,7 +307,6 @@ function adicionarEstilosBusca() {
                 flex-direction: column;
                 gap: 8px;
             }
-            
             .evento-card-busca .evento-rodape-busca {
                 display: flex;
                 justify-content: space-between;
@@ -343,7 +314,6 @@ function adicionarEstilosBusca() {
                 padding: 16px;
                 border-top: 1px solid #f1f5f9;
             }
-            
             .evento-card-busca .evento-preco-busca {
                 font-size: 1.2rem;
                 font-weight: bold;
@@ -367,6 +337,7 @@ function toggleFiltros() {
 
 function atualizarTermoBusca(termo) {
     estadoBusca.termo = termo;
+    
     if (termo.length >= 2 || termo.length === 0) {
         buscarEventos();
     }
@@ -411,8 +382,7 @@ function limparFiltros() {
     estadoBusca.precoMax = '';
     estadoBusca.local = '';
     estadoBusca.filtrosAplicados = false;
-    
-    // Atualizar inputs
+
     const inputs = {
         'campo-busca-avancada': estadoBusca.termo,
         'filtro-categoria': estadoBusca.categoria,
@@ -422,12 +392,12 @@ function limparFiltros() {
         'filtro-preco-max': estadoBusca.precoMax,
         'filtro-local': estadoBusca.local
     };
-    
+
     for (const [id, value] of Object.entries(inputs)) {
         const element = document.getElementById(id);
         if (element) element.value = value;
     }
-    
+
     carregarTodosEventos();
     mostrarToast('🧹 Filtros limpos!');
 }
@@ -435,53 +405,45 @@ function limparFiltros() {
 async function buscarEventos() {
     console.log('🔍 Buscando eventos com filtros:', estadoBusca);
     
-    // Simulação de busca
     const todosEventos = await obterTodosEventos();
-    
-    // Aplicar filtros
     let resultados = [...todosEventos];
-    
-    // Filtrar por termo
+
     if (estadoBusca.termo) {
         const termoLower = estadoBusca.termo.toLowerCase();
-        resultados = resultados.filter(evento => 
+        resultados = resultados.filter(evento =>
             evento.titulo.toLowerCase().includes(termoLower) ||
             evento.descricao?.toLowerCase().includes(termoLower) ||
             evento.local.toLowerCase().includes(termoLower)
         );
     }
-    
-    // Filtrar por categoria
+
     if (estadoBusca.categoria !== 'todos') {
         resultados = resultados.filter(evento => evento.categoria === estadoBusca.categoria);
     }
-    
-    // Filtrar por data
+
     if (estadoBusca.dataInicio) {
         resultados = resultados.filter(evento => evento.data_evento >= estadoBusca.dataInicio);
     }
-    
+
     if (estadoBusca.dataFim) {
         resultados = resultados.filter(evento => evento.data_evento <= estadoBusca.dataFim);
     }
-    
-    // Filtrar por preço
+
     if (estadoBusca.precoMin) {
         resultados = resultados.filter(evento => evento.preco >= parseFloat(estadoBusca.precoMin));
     }
-    
+
     if (estadoBusca.precoMax) {
         resultados = resultados.filter(evento => evento.preco <= parseFloat(estadoBusca.precoMax));
     }
-    
-    // Filtrar por local
+
     if (estadoBusca.local) {
         const localLower = estadoBusca.local.toLowerCase();
-        resultados = resultados.filter(evento => 
+        resultados = resultados.filter(evento =>
             evento.local.toLowerCase().includes(localLower)
         );
     }
-    
+
     estadoBusca.resultados = resultados;
     exibirResultados();
 }
@@ -492,7 +454,6 @@ async function carregarTodosEventos() {
 }
 
 async function obterTodosEventos() {
-    // Simulação de eventos
     return [
         {
             id: 1,
@@ -535,10 +496,9 @@ function exibirResultados() {
     const contador = document.getElementById('contador-resultados');
     
     if (!container || !contador) return;
-    
-    // Atualizar contador
+
     contador.textContent = `Resultados (${estadoBusca.resultados.length})`;
-    
+
     if (estadoBusca.resultados.length === 0) {
         container.innerHTML = `
             <div class="sem-resultados">
@@ -549,7 +509,7 @@ function exibirResultados() {
         `;
         return;
     }
-    
+
     container.innerHTML = estadoBusca.resultados.map(evento => `
         <div class="evento-card-busca" onclick="verDetalhesEventoBusca(${evento.id})">
             <div class="evento-header-busca">
@@ -575,12 +535,10 @@ function exibirResultados() {
 }
 
 function verDetalhesEventoBusca(eventoId) {
-    // Usar a mesma função de detalhes
     if (typeof abrirDetalhesEvento === 'function') {
         abrirDetalhesEvento(eventoId);
     } else {
         mostrarToast('🔍 Redirecionando para detalhes do evento...');
-        // Voltar para tela principal e abrir detalhes
         voltarParaHomeBusca();
     }
 }
@@ -599,19 +557,19 @@ function ordenarResultados(criterio) {
             estadoBusca.resultados.sort((a, b) => b.preco - a.preco);
             break;
         case 'popularidade':
-            // Simulação de popularidade
             estadoBusca.resultados.sort((a, b) => (b.destaque ? 1 : 0) - (a.destaque ? 1 : 0));
             break;
-        default: // relevancia
+        default:
             estadoBusca.resultados.sort((a, b) => (b.destaque ? 1 : 0) - (a.destaque ? 1 : 0));
     }
-    
+
     exibirResultados();
     mostrarToast(`📊 Ordenado por: ${criterio}`);
 }
 
 function formatarData(dataString) {
     if (!dataString) return '';
+    
     const data = new Date(dataString + 'T00:00:00');
     return data.toLocaleDateString('pt-BR');
 }

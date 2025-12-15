@@ -1,6 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-
 const dbPath = path.join(__dirname, 'agenda_the.db');
 const db = new sqlite3.Database(dbPath);
 
@@ -10,13 +9,7 @@ db.serialize(() => {
     // Adicionar colunas de autenticação na tabela usuarios
     db.run(`ALTER TABLE usuarios ADD COLUMN senha TEXT`);
     db.run(`ALTER TABLE usuarios ADD COLUMN tipo_perfil TEXT DEFAULT 'usuario_final'`);
-    db.run(`ALTER TABLE usuarios ADD COLUMN ativo BOOLEAN DEFAULT 1`); 
-    db.get("PRAGMA table_info(usuarios") , (err, result) => { 
-        if (err) { 
-            console.error('Error ao verificar tabela:',err);
-            return;
-        }
-    }
+    db.run(`ALTER TABLE usuarios ADD COLUMN ativo BOOLEAN DEFAULT 1`);
 
     // Criar usuários de exemplo para cada perfil
     const usuariosExemplo = [
@@ -29,7 +22,7 @@ db.serialize(() => {
         },
         {
             nome: 'Maria Santos - Produtora',
-            email: 'produtor@email.com', 
+            email: 'produtor@email.com',
             senha: '123456',
             tipo_perfil: 'produtor',
             pontos: 0
@@ -37,7 +30,7 @@ db.serialize(() => {
         {
             nome: 'Carlos Lima - Curador',
             email: 'curador@email.com',
-            senha: '123456', 
+            senha: '123456',
             tipo_perfil: 'curador',
             pontos: 0
         },

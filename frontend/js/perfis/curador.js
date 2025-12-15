@@ -10,15 +10,14 @@ const estadoCurador = {
 
 function inicializarCurador() {
     console.log('🚀 Inicializando módulo do curador');
-    
     configurarAbasCurador();
     carregarEventosCurador();
-    
     console.log('✅ Curador inicializado');
 }
 
 function configurarAbasCurador() {
     const abas = document.querySelectorAll('#abas-curador .aba');
+    
     abas.forEach(aba => {
         aba.addEventListener('click', function() {
             const abaId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
@@ -30,13 +29,13 @@ function configurarAbasCurador() {
 function mudarAbaCurador(abaId) {
     console.log(`📁 Mudando para aba: ${abaId}`);
     estadoCurador.abaAtiva = abaId;
-    
+
     document.querySelectorAll('#abas-curador .aba').forEach(aba => {
         aba.classList.remove('ativa');
     });
     
     document.querySelector(`#abas-curador .aba[onclick*="${abaId}"]`)?.classList.add('ativa');
-    
+
     document.querySelectorAll('.conteudo-curador .aba-conteudo').forEach(conteudo => {
         conteudo.classList.remove('ativa');
     });
@@ -71,7 +70,7 @@ async function carregarEventosCurador() {
                 dataEnvio: '01/12/2024'
             }
         ];
-        
+
         // Eventos aprovados
         estadoCurador.eventosAprovados = [
             {
@@ -85,7 +84,7 @@ async function carregarEventosCurador() {
                 dataAprovacao: '25/11/2024'
             }
         ];
-        
+
         exibirEventosCurador();
     } catch (error) {
         console.error('❌ Erro ao carregar eventos:', error);
@@ -93,17 +92,12 @@ async function carregarEventosCurador() {
 }
 
 function exibirEventosCurador() {
-    // Pendentes
     exibirListaEventos('pendentes', estadoCurador.eventosPendentes);
-    
-    // Aprovados
     exibirListaEventos('aprovados', estadoCurador.eventosAprovados);
-    
-    // Rejeitados
     exibirListaEventos('rejeitados', estadoCurador.eventosRejeitados);
-    
-    // Atualizar badge
+
     const badge = document.querySelector('#abas-curador .aba[onclick*="pendentes"] .badge');
+    
     if (badge) {
         badge.textContent = estadoCurador.eventosPendentes.length;
     }
@@ -111,8 +105,9 @@ function exibirEventosCurador() {
 
 function exibirListaEventos(tipo, eventos) {
     const container = document.getElementById(`lista-eventos-${tipo}`);
-    if (!container) return;
     
+    if (!container) return;
+
     if (eventos.length === 0) {
         container.innerHTML = `
             <div class="sem-eventos">
@@ -121,7 +116,7 @@ function exibirListaEventos(tipo, eventos) {
         `;
         return;
     }
-    
+
     container.innerHTML = eventos.map(evento => `
         <div class="evento-card-curador">
             <div class="evento-header">
@@ -156,11 +151,11 @@ function exibirListaEventos(tipo, eventos) {
 
 function aprovarEvento(eventoId) {
     const eventoIndex = estadoCurador.eventosPendentes.findIndex(e => e.id === eventoId);
+    
     if (eventoIndex !== -1) {
         const evento = estadoCurador.eventosPendentes[eventoIndex];
         evento.dataAprovacao = new Date().toLocaleDateString('pt-BR');
         
-        // Mover para aprovados
         estadoCurador.eventosAprovados.unshift(evento);
         estadoCurador.eventosPendentes.splice(eventoIndex, 1);
         
@@ -171,12 +166,12 @@ function aprovarEvento(eventoId) {
 
 function rejeitarEvento(eventoId) {
     const eventoIndex = estadoCurador.eventosPendentes.findIndex(e => e.id === eventoId);
+    
     if (eventoIndex !== -1) {
         const evento = estadoCurador.eventosPendentes[eventoIndex];
         evento.dataRejeicao = new Date().toLocaleDateString('pt-BR');
         evento.motivoRejeicao = prompt('Informe o motivo da rejeição:') || 'Não especificado';
         
-        // Mover para rejeitados
         estadoCurador.eventosRejeitados.unshift(evento);
         estadoCurador.eventosPendentes.splice(eventoIndex, 1);
         

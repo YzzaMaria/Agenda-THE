@@ -1,4 +1,4 @@
-// detalhes-evento.js - Tela de Detalhes do Evento
+// detalhes-evento.js -- Tela de Detalhes do Evento
 console.log('✅ Módulo Detalhes do Evento carregado');
 
 let eventoDetalhes = null;
@@ -6,7 +6,6 @@ let eventoDetalhes = null;
 function abrirDetalhesEvento(eventoId) {
     console.log('🔍 Abrindo detalhes do evento:', eventoId);
     
-    // Buscar evento (simulação)
     eventoDetalhes = {
         id: eventoId,
         titulo: 'Festival de Jazz',
@@ -35,8 +34,9 @@ function carregarTelaDetalhes() {
     if (!eventoDetalhes) return;
     
     const tela = document.getElementById('tela-detalhes-evento');
-    if (!tela) return;
     
+    if (!tela) return;
+
     const percentualLotacao = Math.min(100, (eventoDetalhes.ingressosVendidos / eventoDetalhes.lotacao) * 100);
     
     tela.innerHTML = `
@@ -51,7 +51,7 @@ function carregarTelaDetalhes() {
                         <i class="fas fa-share-alt"></i>
                     </span>
                     <span class="icone" onclick="alternarFavoritoEvento(${eventoDetalhes.id})">
-                        <i class="fas fa-heart"></i>
+                        <i class="far fa-heart"></i>
                     </span>
                 </div>
             </div>
@@ -79,7 +79,7 @@ function carregarTelaDetalhes() {
                         <p>${eventoDetalhes.data} às ${eventoDetalhes.hora}</p>
                     </div>
                 </div>
-                
+
                 <div class="info-item">
                     <div class="info-icone">
                         <i class="fas fa-map-marker-alt"></i>
@@ -90,7 +90,7 @@ function carregarTelaDetalhes() {
                         <p class="texto-pequeno">${eventoDetalhes.endereco}</p>
                     </div>
                 </div>
-                
+
                 <div class="info-item">
                     <div class="info-icone">
                         <i class="fas fa-tag"></i>
@@ -100,7 +100,7 @@ function carregarTelaDetalhes() {
                         <p>${eventoDetalhes.categoria}</p>
                     </div>
                 </div>
-                
+
                 <div class="info-item">
                     <div class="info-icone">
                         <i class="fas fa-users"></i>
@@ -113,7 +113,7 @@ function carregarTelaDetalhes() {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="info-item">
                     <div class="info-icone">
                         <i class="fas fa-building"></i>
@@ -161,7 +161,7 @@ function carregarTelaDetalhes() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="comentario">
                         <div class="comentario-avatar">
                             <i class="fas fa-user"></i>
@@ -175,7 +175,7 @@ function carregarTelaDetalhes() {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="novo-comentario">
                     <textarea placeholder="Deixe seu comentário..." rows="2"></textarea>
                     <button class="btn btn-primary" onclick="adicionarComentario()">
@@ -201,16 +201,14 @@ function carregarTelaDetalhes() {
             </div>
         </div>
     `;
-    
-    // Adicionar estilos específicos
+
     adicionarEstilosDetalhes();
-    
-    // Mudar para esta tela
     mudarTela('detalhes-evento');
 }
 
 function adicionarEstilosDetalhes() {
     const styleId = 'estilos-detalhes-evento';
+    
     if (!document.getElementById(styleId)) {
         const style = document.createElement('style');
         style.id = styleId;
@@ -228,11 +226,9 @@ function adicionarEstilosDetalhes() {
                 font-size: 1.2rem;
                 cursor: pointer;
             }
-            
             .detalhes-conteudo {
                 padding-bottom: 120px;
             }
-            
             .evento-imagem-grande {
                 height: 250px;
                 background: linear-gradient(135deg, #9333ea, #ec4899);
@@ -240,7 +236,6 @@ function adicionarEstilosDetalhes() {
                 display: flex;
                 align-items: flex-end;
             }
-            
             .evento-destaque-modal {
                 position: absolute;
                 top: 15px;
@@ -252,19 +247,16 @@ function adicionarEstilosDetalhes() {
                 font-size: 0.8rem;
                 font-weight: 600;
             }
-            
             .lotacao-indicator {
                 width: 100%;
                 height: 6px;
                 background: rgba(255, 255, 255, 0.3);
             }
-            
             .lotacao-bar {
                 height: 100%;
                 background: #10b981;
                 transition: width 0.3s ease;
             }
-            
             .evento-info-detalhada {
                 background: white;
                 border-radius: 16px;
@@ -274,7 +266,6 @@ function adicionarEstilosDetalhes() {
                 position: relative;
                 z-index: 1;
             }
-            
             .secao-detalhes {
                 background: white;
                 border-radius: 12px;
@@ -282,13 +273,11 @@ function adicionarEstilosDetalhes() {
                 margin: 0 20px 20px 20px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             }
-            
             .texto-pequeno {
                 font-size: 0.85rem;
                 color: #64748b;
                 margin-top: 4px;
             }
-            
             .progresso-lotacao {
                 height: 8px;
                 background: #e2e8f0;
@@ -296,23 +285,19 @@ function adicionarEstilosDetalhes() {
                 margin-top: 8px;
                 overflow: hidden;
             }
-            
             .progresso-bar {
                 height: 100%;
                 background: #9333ea;
                 border-radius: 4px;
             }
-            
             .descricao-evento {
                 color: #475569;
                 line-height: 1.6;
                 margin-top: 12px;
             }
-            
             .mapa-container {
                 margin-top: 12px;
             }
-            
             .mapa-simulado {
                 height: 150px;
                 background: #f1f5f9;
@@ -323,17 +308,14 @@ function adicionarEstilosDetalhes() {
                 justify-content: center;
                 color: #64748b;
             }
-            
             .mapa-simulado i {
                 font-size: 3rem;
                 margin-bottom: 10px;
                 color: #9333ea;
             }
-            
             .comentarios-lista {
                 margin-top: 16px;
             }
-            
             .comentario {
                 display: flex;
                 gap: 12px;
@@ -341,13 +323,11 @@ function adicionarEstilosDetalhes() {
                 padding-bottom: 20px;
                 border-bottom: 1px solid #f1f5f9;
             }
-            
             .comentario:last-child {
                 border-bottom: none;
                 margin-bottom: 0;
                 padding-bottom: 0;
             }
-            
             .comentario-avatar {
                 width: 40px;
                 height: 40px;
@@ -359,33 +339,27 @@ function adicionarEstilosDetalhes() {
                 color: #64748b;
                 flex-shrink: 0;
             }
-            
             .comentario-conteudo {
                 flex: 1;
             }
-            
             .comentario-autor {
                 font-weight: 600;
                 color: #1e293b;
             }
-            
             .comentario-data {
                 font-size: 0.8rem;
                 color: #94a3b8;
                 margin-bottom: 6px;
             }
-            
             .comentario-texto {
                 color: #475569;
                 line-height: 1.5;
             }
-            
             .novo-comentario {
                 margin-top: 20px;
                 display: flex;
                 gap: 12px;
             }
-            
             .novo-comentario textarea {
                 flex: 1;
                 padding: 12px;
@@ -394,11 +368,9 @@ function adicionarEstilosDetalhes() {
                 font-size: 0.9rem;
                 resize: none;
             }
-            
             .novo-comentario button {
                 align-self: flex-end;
             }
-            
             #tela-detalhes-evento .detalhes-footer {
                 position: fixed;
                 bottom: 0;
@@ -412,28 +384,23 @@ function adicionarEstilosDetalhes() {
                 align-items: center;
                 z-index: 1000;
             }
-            
             .preco-container {
                 display: flex;
                 flex-direction: column;
             }
-            
             .preco-label {
                 font-size: 0.8rem;
                 color: #64748b;
             }
-            
             .preco-valor {
                 font-size: 1.5rem;
                 font-weight: bold;
                 color: #9333ea;
             }
-            
             .footer-botoes {
                 display: flex;
                 gap: 12px;
             }
-            
             .footer-botoes .btn {
                 padding: 12px 20px;
             }
@@ -447,7 +414,8 @@ function voltarParaTelaAnterior() {
 }
 
 function alternarFavoritoEvento(eventoId) {
-    const icone = document.querySelector('#tela-detalhes-evento .fa-heart');
+    const icone = document.querySelector('#tela-detalhes-evento .fa-heart, #tela-detalhes-evento .far');
+    
     if (icone) {
         icone.classList.toggle('fas');
         icone.classList.toggle('far');
@@ -463,7 +431,7 @@ function compartilharEvento(eventoId) {
             url: window.location.href
         });
     } else {
-        mostrarToast('📤 Link copiado para a área de transferência!');
+        mostrarToast('🔗 Link copiado para a área de transferência!');
     }
 }
 
@@ -472,11 +440,12 @@ function comprarIngresso(eventoId) {
 }
 
 function mostrarMaisInformacoes() {
-    alert(`Informações Adicionais:\n\n📞 Contato: ${eventoDetalhes.contato}\n👥 Organizador: ${eventoDetalhes.organizador}\n🎫 Ingressos restantes: ${eventoDetalhes.lotacao - eventoDetalhes.ingressosVendidos}\n\nPolítica de reembolso: Consulte o organizador.`);
+    alert(`Informações Adicionais:\n\n📞 Contato: ${eventoDetalhes.contato}\n🏢 Organizador: ${eventoDetalhes.organizador}\n🎫 Ingressos restantes: ${eventoDetalhes.lotacao - eventoDetalhes.ingressosVendidos}\n\nℹ️ Política de reembolso: Consulte o organizador.`);
 }
 
 function adicionarComentario() {
     const textarea = document.querySelector('#tela-detalhes-evento .novo-comentario textarea');
+    
     if (textarea && textarea.value.trim()) {
         mostrarToast('💬 Comentário enviado!');
         textarea.value = '';

@@ -14,17 +14,16 @@ const estadoParceiro = {
 
 function inicializarParceiro() {
     console.log('🚀 Inicializando módulo do parceiro');
-    
     configurarAbasParceiro();
     carregarCampanhas();
     carregarEventosDisponiveis();
     carregarEstatisticasParceiro();
-    
     console.log('✅ Parceiro inicializado');
 }
 
 function configurarAbasParceiro() {
     const abas = document.querySelectorAll('#abas-parceiro .aba');
+    
     abas.forEach(aba => {
         aba.addEventListener('click', function() {
             const abaId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
@@ -36,13 +35,13 @@ function configurarAbasParceiro() {
 function mudarAbaParceiro(abaId) {
     console.log(`📁 Mudando para aba: ${abaId}`);
     estadoParceiro.abaAtiva = abaId;
-    
+
     document.querySelectorAll('#abas-parceiro .aba').forEach(aba => {
         aba.classList.remove('ativa');
     });
     
     document.querySelector(`#abas-parceiro .aba[onclick*="${abaId}"]`)?.classList.add('ativa');
-    
+
     document.querySelectorAll('.conteudo-parceiro .aba-conteudo').forEach(conteudo => {
         conteudo.classList.remove('ativa');
     });
@@ -52,7 +51,6 @@ function mudarAbaParceiro(abaId) {
 
 async function carregarCampanhas() {
     try {
-        // Campanhas simuladas
         estadoParceiro.campanhas = [
             {
                 id: 1,
@@ -100,8 +98,9 @@ async function carregarCampanhas() {
 
 function exibirCampanhas() {
     const container = document.getElementById('lista-campanhas');
-    if (!container) return;
     
+    if (!container) return;
+
     if (estadoParceiro.campanhas.length === 0) {
         container.innerHTML = `
             <div class="sem-campanhas">
@@ -111,10 +110,9 @@ function exibirCampanhas() {
         `;
         return;
     }
-    
+
     container.innerHTML = estadoParceiro.campanhas.map(campanha => {
         const progresso = campanha.orcamento > 0 ? (campanha.investido / campanha.orcamento) * 100 : 0;
-        const progressoTexto = progresso.toFixed(0);
         
         return `
             <div class="campanha-card">
@@ -163,7 +161,6 @@ function exibirCampanhas() {
 
 async function carregarEventosDisponiveis() {
     try {
-        // Eventos disponíveis para patrocínio
         estadoParceiro.eventosDisponiveis = [
             {
                 id: 1,
@@ -205,8 +202,9 @@ async function carregarEventosDisponiveis() {
 
 function exibirEventosDisponiveis() {
     const container = document.getElementById('lista-eventos-parceiro');
-    if (!container) return;
     
+    if (!container) return;
+
     container.innerHTML = estadoParceiro.eventosDisponiveis.map(evento => `
         <div class="evento-card">
             <div class="evento-imagem" style="background: linear-gradient(135deg, #4f46e5, #6366f1)"></div>
@@ -245,7 +243,7 @@ function exibirEventosDisponiveis() {
 
 function criarNovaCampanha() {
     console.log('🆕 Criando nova campanha');
-    
+
     const modalHTML = `
         <div class="modal-overlay" onclick="fecharModal()">
             <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 600px;">
@@ -259,7 +257,6 @@ function criarNovaCampanha() {
                             <label for="campanha-titulo">Título da Campanha</label>
                             <input type="text" id="campanha-titulo" placeholder="Ex: Patrocínio Festival de Jazz" required>
                         </div>
-                        
                         <div class="form-group">
                             <label for="campanha-evento">Evento</label>
                             <select id="campanha-evento" required>
@@ -269,7 +266,6 @@ function criarNovaCampanha() {
                                 ).join('')}
                             </select>
                         </div>
-                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="campanha-inicio">Data de Início</label>
@@ -280,17 +276,14 @@ function criarNovaCampanha() {
                                 <input type="date" id="campanha-fim" required>
                             </div>
                         </div>
-                        
                         <div class="form-group">
                             <label for="campanha-orcamento">Orçamento Total (R$)</label>
                             <input type="number" id="campanha-orcamento" min="0" step="0.01" placeholder="5000.00" required>
                         </div>
-                        
                         <div class="form-group">
                             <label for="campanha-objetivos">Objetivos da Campanha</label>
                             <textarea id="campanha-objetivos" rows="3" placeholder="Descreva os objetivos desta campanha..."></textarea>
                         </div>
-                        
                         <div class="modal-actions">
                             <button type="button" class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Criar Campanha</button>
@@ -300,36 +293,39 @@ function criarNovaCampanha() {
             </div>
         </div>
     `;
-    
+
     const modal = document.createElement('div');
     modal.innerHTML = modalHTML;
     modal.id = 'modal-nova-campanha';
     document.body.appendChild(modal);
-    
-    // Configurar formulário
+
     const form = document.getElementById('form-nova-campanha');
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         salvarNovaCampanha(this);
     });
-    
-    // Definir datas padrão
+
     const hoje = new Date();
     const amanha = new Date(hoje);
     amanha.setDate(amanha.getDate() + 1);
     
+    const fim = new Date(amanha);
+    fim.setMonth(fim.getMonth() + 1);
+
     document.getElementById('campanha-inicio').valueAsDate = amanha;
-    document.getElementById('campanha-fim').valueAsDate = new Date(amanha);
-    document.getElementById('campanha-fim').valueAsDate.setMonth(amanha.getMonth() + 1);
+    document.getElementById('campanha-fim').valueAsDate = fim;
 }
 
 function salvarNovaCampanha(form) {
     const formData = new FormData(form);
-    
+    const eventoSelecionado = estadoParceiro.eventosDisponiveis.find(
+        e => e.id == formData.get('evento')
+    );
+
     const novaCampanha = {
         id: estadoParceiro.campanhas.length + 1,
         titulo: formData.get('titulo') || 'Nova Campanha',
-        evento: 'Festival de Jazz', // Buscar do select
+        evento: eventoSelecionado ? eventoSelecionado.titulo : 'Evento não especificado',
         status: 'planejada',
         orcamento: parseFloat(formData.get('orcamento')) || 0,
         investido: 0,
@@ -338,7 +334,7 @@ function salvarNovaCampanha(form) {
         visualizacoes: 0,
         cliques: 0
     };
-    
+
     estadoParceiro.campanhas.unshift(novaCampanha);
     exibirCampanhas();
     atualizarEstatisticasParceiro();
@@ -353,6 +349,7 @@ function editarCampanha(campanhaId) {
 
 function verDetalhesCampanha(campanhaId) {
     const campanha = estadoParceiro.campanhas.find(c => c.id === campanhaId);
+    
     if (campanha) {
         alert(`Detalhes da Campanha:\n\n${campanha.titulo}\n📅 ${campanha.inicio} → ${campanha.fim}\n💰 R$ ${campanha.investido.toFixed(2)} / R$ ${campanha.orcamento.toFixed(2)}\n👁️ ${campanha.visualizacoes} visualizações\n🖱️ ${campanha.cliques} cliques`);
     }
@@ -360,8 +357,10 @@ function verDetalhesCampanha(campanhaId) {
 
 function proporPatrocinio(eventoId) {
     const evento = estadoParceiro.eventosDisponiveis.find(e => e.id === eventoId);
+    
     if (evento) {
         const valor = prompt(`Propor patrocínio para "${evento.titulo}"\n\nValor do investimento (R$):`);
+        
         if (valor && !isNaN(valor)) {
             mostrarToast(`✅ Proposta de patrocínio enviada!\nEvento: ${evento.titulo}\nValor: R$ ${parseFloat(valor).toFixed(2)}`);
         }
@@ -369,7 +368,6 @@ function proporPatrocinio(eventoId) {
 }
 
 function carregarEstatisticasParceiro() {
-    // Calcular estatísticas
     estadoParceiro.estatisticas.campanhasAtivas = estadoParceiro.campanhas.filter(c => c.status === 'ativa').length;
     estadoParceiro.estatisticas.investimentoTotal = estadoParceiro.campanhas.reduce((total, campanha) => total + campanha.investido, 0);
     estadoParceiro.estatisticas.visualizacoes = estadoParceiro.campanhas.reduce((total, campanha) => total + campanha.visualizacoes, 0);
@@ -380,22 +378,18 @@ function carregarEstatisticasParceiro() {
 function atualizarEstatisticasParceiro() {
     const estatisticas = estadoParceiro.estatisticas;
     
-    document.querySelectorAll('#aba-relatorios .card-estatistica .estatistica-valor').forEach((el, index) => {
-        switch(index) {
-            case 0:
-                el.textContent = estatisticas.campanhasAtivas;
-                break;
-            case 1:
-                el.textContent = `R$ ${estatisticas.investimentoTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-                break;
-            case 2:
-                el.textContent = estatisticas.visualizacoes.toLocaleString();
-                break;
-        }
-    });
+    const elementos = {
+        'estatistica-campanhas': estatisticas.campanhasAtivas,
+        'estatistica-investimento': `R$ ${estatisticas.investimentoTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`,
+        'estatistica-visualizacoes': estatisticas.visualizacoes.toLocaleString()
+    };
+
+    for (const [id, valor] of Object.entries(elementos)) {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.textContent = valor;
+    }
 }
 
-// Funções auxiliares
 function fecharModal() {
     const modal = document.getElementById('modal-nova-campanha');
     if (modal) modal.remove();
