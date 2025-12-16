@@ -1,7 +1,7 @@
 // usuario-final.js - Módulo especializado para funcionalidades do usuário final
 console.log('✅ Módulo Usuário Final carregado');
 
-const USUARIO_API_BASE = '/api';
+const USUARIO_API_BASE = window.location.origin + '/api';
 
 const estadoUsuarioFinal = {
     categoriaAtiva: 'todos',

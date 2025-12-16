@@ -1,6 +1,5 @@
 // app.js - Funções específicas da aplicação (sem autenticação)
-const API_BASE = '/api';
-
+const API_BASE_URL = window.location.origin + '/api';
 const estadoApp = {
     usuario: null,
     eventos: [],
@@ -28,7 +27,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ==================== CONEXÃO COM API ====================
 async function testarConexaoAPI() {
     try {
-        const response = await fetch(`${API_BASE}/`);
+        const response = await fetch(`${API_BASE_URL}/`);
+         if (!response.ok) {  
+             throw new Error('API respondeu com status:${response.status}');
+         }
         const data = await response.json();
         console.log('✅ API conectada:', data.message);
         return true;
