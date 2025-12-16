@@ -14,29 +14,56 @@ const estadoApp = {
     categoriaAtiva: 'todos'
 };
 
+// ==================== VERIFICAÇÃO DE MÓDULOS ====================
+function verificarModulosCarregados() {
+    console.log('🔍 VERIFICAÇÃO DE MÓDULOS:');
+    
+    const modulos = {
+        'App principal': typeof estadoApp !== 'undefined',
+        'Favoritos (abrirFavoritos)': typeof abrirFavoritos !== 'undefined',
+        'Perfil (abrirPerfilUsuario)': typeof abrirPerfilUsuario !== 'undefined',
+        'Função mudarTela': typeof mudarTela !== 'undefined',
+        'Função mostrarToast': typeof mostrarToast !== 'undefined',
+        'Função fazerLogout': typeof fazerLogout !== 'undefined'
+    };
+    
+    Object.entries(modulos).forEach(([nome, carregado]) => {
+        console.log(`${carregado ? '✅' : '❌'} ${nome}: ${carregado ? 'Carregado' : 'NÃO CARREGADO'}`);
+    });
+    
+    return modulos;
+}
+
 // ==================== INICIALIZAÇÃO ====================
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('📱 App.js inicializado');
-    await testarConexaoAPI();
     
+    // Verifica módulos carregados
+    verificarModulosCarregados();
+    
+    await testarConexaoAPI();
+
     if (window.location.href.includes('usuario-final')) {
         await inicializarUsuarioFinal();
     }
+    
+    // Configura funções globais de navegação
+    configurarNavegacaoGlobal();
 });
 
 // ==================== CONEXÃO COM API ====================
 async function testarConexaoAPI() {
     try {
         const response = await fetch(`${API_BASE_URL}/`);
-         if (!response.ok) {  
-             throw new Error('API respondeu com status:${response.status}');
-         }
+        if (!response.ok) {  
+            throw new Error(`API respondeu com status: ${response.status}`);
+        }
         const data = await response.json();
         console.log('✅ API conectada:', data.message);
         return true;
     } catch (error) {
         console.warn('⚠️ API offline, usando dados locais');
-        
+
         estadoApp.eventos = [
             {
                 id: 1,
@@ -83,7 +110,7 @@ async function testarConexaoAPI() {
                 destaque: true
             }
         ];
-        
+
         return false;
     }
 }
@@ -99,9 +126,9 @@ async function inicializarUsuarioFinal() {
 
 async function carregarEventos() {
     console.log('📡 Carregando eventos...');
-    
+
     try {
-        const response = await fetch(`${API_BASE}/eventos`);
+        const response = await fetch(`${API_BASE_URL}/eventos`);
         if (response.ok) {
             estadoApp.eventos = await response.json();
             console.log(`✅ ${estadoApp.eventos.length} eventos carregados`);
@@ -121,7 +148,7 @@ async function carregarEventos() {
 
 function exibirEventos(eventos) {
     const container = document.getElementById('lista-eventos-usuario');
-    
+
     if (!container) {
         console.error('❌ Container de eventos não encontrado');
         return;
@@ -171,7 +198,7 @@ function exibirEventos(eventos) {
 
 function inicializarCategorias() {
     const container = document.getElementById('lista-categorias-usuario');
-    
+
     if (!container) {
         console.error('❌ Container de categorias não encontrado');
         return;
@@ -189,7 +216,7 @@ function inicializarCategorias() {
 
 function inicializarBusca() {
     const campoBusca = document.getElementById('campo-busca-usuario');
-    
+
     if (campoBusca) {
         campoBusca.addEventListener('input', (e) => {
             buscarEventos(e.target.value);
@@ -210,36 +237,36 @@ function filtrarPorCategoria(categoriaId) {
     document.querySelectorAll('.categoria-btn').forEach(btn => {
         btn.classList.remove('ativa');
     });
-    
+
     document.querySelector(`button[onclick*="${categoriaId}"]`)?.classList.add('ativa');
 
     const eventosFiltrados = categoriaId === 'todos'
         ? estadoApp.eventos
         : estadoApp.eventos.filter(e => e.categoria === categoriaId);
-    
+
     exibirEventos(eventosFiltrados);
 }
 
 function buscarEventos(termo) {
     console.log(`🔍 Buscando: "${termo}"`);
-    
+
     const eventosFiltrados = estadoApp.eventos.filter(evento =>
         evento.titulo.toLowerCase().includes(termo.toLowerCase()) ||
         (evento.descricao && evento.descricao.toLowerCase().includes(termo.toLowerCase())) ||
         evento.local.toLowerCase().includes(termo.toLowerCase())
     );
-    
+
     exibirEventos(eventosFiltrados);
 }
 
 // ==================== FUNÇÕES DE EVENTOS ====================
 function verDetalhesEvento(eventoId) {
     console.log(`🔍 Visualizando evento ID: ${eventoId}`);
-    
+
     const evento = estadoApp.eventos.find(e => e.id === eventoId);
-    
+
     if (!evento) {
-        alert('Evento não encontrado!');
+        mostrarToast('Evento não encontrado!');
         return;
     }
 
@@ -333,7 +360,7 @@ function verDetalhesEvento(eventoId) {
             margin-top: 20px;
         }
     `;
-    
+
     document.head.appendChild(style);
 }
 
@@ -348,29 +375,40 @@ function alternarFavorito(elemento, eventoId) {
     const isFavorito = elemento.textContent === '❤️';
     elemento.textContent = isFavorito ? '🤍' : '❤️';
     elemento.classList.toggle('ativo', !isFavorito);
-    
+
     console.log(`${isFavorito ? '❌ Removido' : '✅ Adicionado'} favorito: ${eventoId}`);
 
-    const favoritos = JSON.parse(localStorage.getItem('favoritos') || '[]');
-    
+    // Usa a mesma chave do favoritos.js
+    const favoritos = JSON.parse(localStorage.getItem('favoritos_usuario') || '[]');
+
     if (isFavorito) {
         const index = favoritos.indexOf(eventoId);
         if (index > -1) favoritos.splice(index, 1);
     } else {
-        favoritos.push(eventoId);
+        if (!favoritos.includes(eventoId)) {
+            favoritos.push(eventoId);
+        }
     }
+
+    localStorage.setItem('favoritos_usuario', JSON.stringify(favoritos));
     
-    localStorage.setItem('favoritos', JSON.stringify(favoritos));
+    // Dispara evento para atualizar outras partes do app
+    window.dispatchEvent(new CustomEvent('favoritos-alterados', {
+        detail: { eventoId, isFavorito }
+    }));
+    
+    // Mostra feedback
+    mostrarToast(isFavorito ? 'Removido dos favoritos' : 'Adicionado aos favoritos!');
 }
 
 function comprarIngresso(eventoId) {
-    alert(`🎫 Compra de ingresso para evento ID: ${eventoId}\n\nEsta funcionalidade será implementada em breve!`);
+    mostrarToast(`🎫 Compra de ingresso para evento ID: ${eventoId}\n\nEsta funcionalidade será implementada em breve!`);
 }
 
 // ==================== FUNÇÕES AUXILIARES ====================
 function formatarData(dataString) {
     if (!dataString) return 'Data não informada';
-    
+
     try {
         const data = new Date(dataString + 'T00:00:00');
         return data.toLocaleDateString('pt-BR', {
@@ -386,33 +424,230 @@ function formatarData(dataString) {
 // ==================== NAVEGAÇÃO INTERNA ====================
 function mudarParaHomeUsuario() {
     console.log('🏠 Mudando para Home (usuário)');
+    
+    // Mostra todos os elementos de volta
+    document.getElementById('lista-categorias-usuario').style.display = 'flex';
+    document.getElementById('campo-busca-usuario').style.display = 'block';
+    
+    // Volta para eventos normais
+    filtrarPorCategoria('todos');
 }
 
 function mudarParaBuscaUsuario() {
     console.log('🔍 Mudando para Busca (usuário)');
+    
+    // Foca no campo de busca
+    const campoBusca = document.getElementById('campo-busca-usuario');
+    if (campoBusca) {
+        campoBusca.focus();
+    }
 }
 
 function mudarParaFavoritosUsuario() {
     console.log('❤️ Mudando para Favoritos (usuário)');
-    alert('📋 Lista de favoritos em desenvolvimento!');
     
-    const favoritos = JSON.parse(localStorage.getItem('favoritos') || '[]');
-    
-    if (favoritos.length > 0) {
-        alert(`Você tem ${favoritos.length} eventos favoritados!`);
+    // Tenta chamar a função do módulo de favoritos
+    if (typeof abrirFavoritos === 'function') {
+        abrirFavoritos();
     } else {
-        alert('Você ainda não favoritou nenhum evento.');
+        console.error('❌ Função abrirFavoritos não encontrada');
+        console.log('Carregando fallback...');
+        
+        // Fallback: mostra interface básica
+        mostrarInterfaceFavoritosBasica();
+    }
+}
+
+function mostrarInterfaceFavoritosBasica() {
+    const container = document.getElementById('lista-eventos-usuario');
+    if (!container) return;
+    
+    // Oculta elementos de filtro/busca
+    document.getElementById('lista-categorias-usuario').style.display = 'none';
+    document.getElementById('campo-busca-usuario').style.display = 'none';
+    
+    const favoritos = JSON.parse(localStorage.getItem('favoritos_usuario') || '[]');
+    const eventosFavoritos = estadoApp.eventos.filter(e => favoritos.includes(e.id));
+    
+    if (eventosFavoritos.length > 0) {
+        exibirEventos(eventosFavoritos);
+        document.getElementById('titulo-pagina').textContent = 'Meus Favoritos';
+    } else {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #64748b;">
+                <div style="font-size: 3rem; margin-bottom: 16px;">❤️</div>
+                <p>Você ainda não tem eventos favoritados</p>
+                <p style="font-size: 0.9rem;">Explore eventos e clique no 🤍 para adicionar aos favoritos</p>
+                <button class="btn btn-primary" onclick="mudarParaHomeUsuario()" style="margin-top: 16px;">
+                    Explorar Eventos
+                </button>
+            </div>
+        `;
     }
 }
 
 function mudarParaPerfilUsuario() {
     console.log('👤 Mudando para Perfil (usuário)');
-    alert('👤 Perfil do usuário em desenvolvimento!');
+    
+    // Tenta chamar a função do módulo de perfil
+    if (typeof abrirPerfilUsuario === 'function') {
+        abrirPerfilUsuario();
+    } else {
+        console.error('❌ Função abrirPerfilUsuario não encontrada');
+        console.log('Carregando fallback...');
+        
+        // Fallback: mostra interface básica
+        mostrarInterfacePerfilBasica();
+    }
+}
+
+function mostrarInterfacePerfilBasica() {
+    const container = document.getElementById('lista-eventos-usuario');
+    if (!container) return;
+    
+    // Oculta elementos de filtro/busca
+    document.getElementById('lista-categorias-usuario').style.display = 'none';
+    document.getElementById('campo-busca-usuario').style.display = 'none';
+    
+    const favoritos = JSON.parse(localStorage.getItem('favoritos_usuario') || '[]');
+    
+    container.innerHTML = `
+        <div style="text-align: center; padding: 40px; max-width: 400px; margin: 0 auto;">
+            <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #667eea, #764ba2); 
+                      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                      font-size: 48px; color: white; margin: 0 auto 20px;">
+                👤
+            </div>
+            <h3 style="margin-bottom: 8px; color: #1e293b;">Meu Perfil</h3>
+            <p style="color: #64748b; margin-bottom: 24px;">Usuário</p>
+            
+            <div style="background: #f8fafc; padding: 16px; border-radius: 12px; margin-bottom: 20px; text-align: left;">
+                <div style="margin-bottom: 12px;">
+                    <strong>🎫 Ingressos Comprados:</strong> 0
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <strong>❤️ Favoritos:</strong> ${favoritos.length}
+                </div>
+                <div>
+                    <strong>📅 Último Acesso:</strong> ${new Date().toLocaleDateString('pt-BR')}
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%; margin-bottom: 12px;" onclick="mostrarToast('Funcionalidade em desenvolvimento')">
+                Editar Perfil
+            </button>
+            <button class="btn btn-secondary" style="width: 100%;" onclick="fazerLogout()">
+                Sair
+            </button>
+        </div>
+    `;
 }
 
 function mostrarNotificacoes() {
     console.log('🔔 Mostrando notificações');
-    alert('📬 Notificações:\n\n• Novo evento: Festival de Música\n• Seu check-in foi registrado\n• Promoção: 20% off em ingressos');
+    mostrarToast('📬 Notificações:\n\n• Novo evento: Festival de Música\n• Seu check-in foi registrado\n• Promoção: 20% off em ingressos');
 }
 
-console.log('✅ App.js carregado');
+// ==================== FUNÇÕES FALLBACK ====================
+// Cria funções fallback caso os módulos não carreguem
+if (typeof mostrarToast === 'undefined') {
+    console.warn('⚠️ Função mostrarToast não encontrada, criando fallback');
+    window.mostrarToast = function(mensagem) {
+        console.log(`🍞 Toast: ${mensagem}`);
+        
+        // Cria um toast básico
+        const toast = document.createElement('div');
+        toast.textContent = mensagem;
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 9999;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: fadeInOut 3s ease-in-out;
+        `;
+        
+        // Adiciona estilo de animação
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateY(-10px); }
+                10% { opacity: 1; transform: translateY(0); }
+                90% { opacity: 1; transform: translateY(0); }
+                100% { opacity: 0; transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        document.body.appendChild(toast);
+        
+        // Remove após 3 segundos
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+}
+
+if (typeof fazerLogout === 'undefined') {
+    console.warn('⚠️ Função fazerLogout não encontrada, criando fallback');
+    window.fazerLogout = function() {
+        console.log('🚪 Fazendo logout (fallback)');
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('favoritos_usuario');
+        mostrarToast('Você saiu da conta');
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1000);
+    };
+}
+
+if (typeof mudarTela === 'undefined') {
+    console.warn('⚠️ Função mudarTela não encontrada, criando fallback');
+    window.mudarTela = function(tela) {
+        console.log(`🔄 (Fallback) Mudando para tela: ${tela}`);
+        
+        // Oculta todas as telas
+        document.querySelectorAll('[data-tela]').forEach(elemento => {
+            elemento.style.display = 'none';
+        });
+        
+        // Mostra a tela solicitada
+        const telaElemento = document.getElementById(`tela-${tela}`);
+        if (telaElemento) {
+            telaElemento.style.display = 'block';
+        } else {
+            console.error(`Tela "${tela}" não encontrada`);
+        }
+    };
+}
+
+// ==================== CONFIGURAÇÃO GLOBAL ====================
+function configurarNavegacaoGlobal() {
+    // Expõe funções globalmente para ícones clicáveis
+    window.navegarParaHome = mudarParaHomeUsuario;
+    window.navegarParaFavoritos = mudarParaFavoritosUsuario;
+    window.navegarParaPerfil = mudarParaPerfilUsuario;
+    window.navegarParaBusca = mudarParaBuscaUsuario;
+    
+    console.log('🌐 Navegação global configurada');
+}
+
+// ==================== EXPORTAÇÃO DE FUNÇÕES ====================
+// Expõe funções principais para outros módulos
+window.mudarParaHomeUsuario = mudarParaHomeUsuario;
+window.mudarParaFavoritosUsuario = mudarParaFavoritosUsuario;
+window.mudarParaPerfilUsuario = mudarParaPerfilUsuario;
+window.mudarParaBuscaUsuario = mudarParaBuscaUsuario;
+window.verDetalhesEvento = verDetalhesEvento;
+window.alternarFavorito = alternarFavorito;
+window.mostrarNotificacoes = mostrarNotificacoes;
+
+console.log('✅ App.js carregado e configurado');
